@@ -46,29 +46,29 @@ class G4UniformMagField;
 
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
-  public:
-    DetectorConstruction();
-    virtual ~DetectorConstruction();
+public:
+	DetectorConstruction();
+	virtual ~DetectorConstruction();
 
-    virtual G4VPhysicalVolume* Construct();
-    virtual void ConstructSDandField();
-    
-    G4LogicalVolume*	GetScoringVolume() const { return fScoringVolume; }
+	virtual G4VPhysicalVolume* Construct();
+	virtual void ConstructSDandField();
+
+	G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
 	//G4LogicalVolume*	fLogicElectrode; 
 	//G4LogicalVolume*	fLogicElectrodeA; 
 	//G4LogicalVolume*	fLogicElectrodeB; 
 
-  	G4Region* ChamberRegion; // cut region
-  	G4Region* ElectrodeRegion; // cut region
-  	G4Region* EnvelopeRegion; // cut region
+	G4Region* ChamberRegion; // cut region
+	G4Region* ElectrodeRegion; // cut region
+	G4Region* EnvelopeRegion; // cut region
 
 
-  protected:
-    G4LogicalVolume*  fScoringVolume;
-	private:
-		G4Cache<ElectricFieldSetup*> fEmFieldSetup;
-		//G4Cache<SensitiveDetector*>  fElectrodeSD_A;
-		//G4Cache<SensitiveDetector*>  fElectrodeSD_B;
+protected:
+	G4LogicalVolume* fScoringVolume;
+private:
+	G4Cache<ElectricFieldSetup*> fEmFieldSetup;
+	//G4Cache<SensitiveDetector*>  fElectrodeSD_A;
+	//G4Cache<SensitiveDetector*>  fElectrodeSD_B;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

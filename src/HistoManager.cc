@@ -38,70 +38,78 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 HistoManager::HistoManager()
-  : fFileName("GasDetector")
+	: fFileName("GasDetector")
 {
-  Book();
+	Book();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 HistoManager::~HistoManager()
 {
-  delete G4AnalysisManager::Instance();
+	delete G4AnalysisManager::Instance();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void HistoManager::Book()
 {
-  // Create or get analysis manager
-  // The choice of analysis technology is done via selection of a namespace
-  // in HistoManager.hh
-  G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
-  //analysisManager->SetDefaultFileType("root");
-  analysisManager->SetFileName(fFileName);
-  analysisManager->SetVerboseLevel(1);
-  analysisManager->SetActivation(true);     //enable inactivation of histograms
-
-  // Define histograms start values
-  const G4int kMaxHisto = 8;
-  //const G4String id[] = {"0","1","2","3","4","5","6","7","8","9",
-  //                       "10","11","12","13","14","15","16","17","18"};
-  const G4String id[] = {"0","1","2","3","4","5","6","7"};
-  const G4String title[] = 
-      {"Position e^{-}, electrode in", // 0
-       "Position e^{-}, electrode A",  // 1
-       "Position e^{-}, electrode B",  // 2  
-       "Pos_X_e^{-}_Electrode_A",      // 0
-       "Pos_X_e^{-}_Electrode_B",      // 1
-       "Pos_Z_e^{-}_Electrode_A",      // 2
-       "Pos_Z_e^{-}_Electrode_B",      // 3
-	   "E_{kin} of electron, electrode", // 4
-
-      };
-  // Default values (to be reset via /analysis/h1/set command) 
-  G4int nbins = 100;
-  G4double vmin = 0.;
-  G4double vmax = 100.;
-  // Create all histograms as inactivated 
-  // as we have not yet set nbins, vmin, vmax
-  //for(G4int k=0; k<kMaxHisto; k++){
-	//		G4int ig = analysisManager->CreateH2(id[k], title[k], 100, -200, 200, 100, -200, 200);
-	//		analysisManager->SetH2Activation(ig, false);
-  //};
-
-	for (G4int k=0; k<kMaxHisto; k++) {
-			if(k<3){
-					G4int ig = analysisManager->CreateH2(id[k], title[k], nbins, vmin, vmax, nbins, vmin, vmax);
-					analysisManager->SetH2Activation(ig, false);}
-			else{
-					G4int ih = analysisManager->CreateH1(id[k], title[k], nbins, vmin, vmax);
-					analysisManager->SetH1Activation(ih, false);}
-  }
+	// Create or get analysis manager
+	// The choice of analysis technology is done via selection of a namespace
+	// in HistoManager.hh
+	G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+	analysisManager->SetFileName(fFileName);
+	analysisManager->SetVerboseLevel(1);
+	analysisManager->SetActivation(true);     //enable inactivation of histograms
 
 
+	// Define histograms start values
+	const G4int kMaxHisto = 11;
+	const G4String id[] = { "0","1","2","3","4","5","6","7","8","9","10" };
+	const G4String title[] =
+	{ "Position e^{-}, electrode in", // 0
+	 "Position e^{-}, electrode A",  // 1
+	 "Position e^{-}, electrode B",  // 2  
+	 "ElectrodeHitOnlyElec",           // 3
+	 "Pos_X_e^{-}_Electrode_A",      // 0
+	 "Pos_X_e^{-}_Electrode_B",      // 1
+	 "Pos_Z_e^{-}_Electrode_A",      // 2
+	 "Pos_Z_e^{-}_Electrode_B",      // 3
+	 "E_{kin} of electron, electrode", // 4
+	 "incident gamma energy",          // 5
+	 "ElectrodeEneOnlyElec"            // 6
+	};
+	// Default values (to be reset via /analysis/h1/set command) 
+	G4int nbins = 100;
+	G4double vmin = 0.;
+	G4double vmax = 100.;
+
+	for (G4int k = 0; k < kMaxHisto; k++) {
+		if (k < 4) {
+			G4int ig = analysisManager->CreateH2(id[k], title[k], nbins, vmin, vmax, nbins, vmin, vmax);
+			analysisManager->SetH2Activation(ig, false);
+		}
+		else {
+			G4int ih = analysisManager->CreateH1(id[k], title[k], nbins, vmin, vmax);
+			analysisManager->SetH1Activation(ih, false);
+		}
+	}
 
 
+	/*
+	analysisManager->CreateNtuple("GasPBPM", "GasPBPM data");
+	analysisManager->CreateNtupleDColumn("PosXOfElectronA"); // column id = 0
+	analysisManager->CreateNtupleDColumn("PosXOfElectronB"); // column id = 1
+	analysisManager->CreateNtupleDColumn("PosZOfElectronA"); // column id = 2
+	analysisManager->CreateNtupleDColumn("PosZOfElectronB"); // column id = 3
+	analysisManager->CreateNtupleDColumn("EOfElectronAtElectrode"); // column id = 4
+	analysisManager->CreateNtupleDColumn("BeamEnergy"); // column id = 5
+	analysisManager->FinishNtuple();
+
+	analysisManager->CreateH2("0", "PosElecAB", 100, 0, 100, 100, 0, 100);
+	analysisManager->CreateH2("1", "PosElecA", 100, 0, 100, 100, 0, 100);
+	analysisManager->CreateH2("2", "PosElecB", 100, 0, 100, 100, 0, 100);
+	*/
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

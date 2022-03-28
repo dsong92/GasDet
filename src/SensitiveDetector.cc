@@ -34,6 +34,8 @@ G4bool SensitiveDetector::ProcessHits(G4Step* stp, G4TouchableHistory*)
 {
   G4Track* trk = stp->GetTrack();
 
+  //if( stp->GetStepLength() < 1e-2 * CLHEP::mm) stp->GetTrack()->SetTrackStatus(fStopAndKill);
+  
   EssHit* ht;
   ht = new EssHit();
 

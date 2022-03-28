@@ -44,8 +44,8 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 RunAction::RunAction()
-: G4UserRunAction(), fHistoManager(0)
-{ 
+	: G4UserRunAction(), fHistoManager(0)
+{
 	fHistoManager = new HistoManager;
 }
 
@@ -59,14 +59,14 @@ RunAction::~RunAction()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void RunAction::BeginOfRunAction(const G4Run*)
-{ 
-  // inform the runManager to save random number seed
-  G4RunManager::GetRunManager()->SetRandomNumberStore(false);
+{
+	// inform the runManager to save random number seed
+	G4RunManager::GetRunManager()->SetRandomNumberStore(false);
 
 	G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
-  if ( analysisManager->IsActive() ) {
-    analysisManager->OpenFile();
-  }
+	if (analysisManager->IsActive()) {
+		analysisManager->OpenFile();
+	}
 
 }
 
@@ -74,17 +74,17 @@ void RunAction::BeginOfRunAction(const G4Run*)
 
 void RunAction::EndOfRunAction(const G4Run* run)
 {
-  //if (isMaster) run->EndOfRun();
+	//if (isMaster) run->EndOfRun();
 
-  //save histograms      
-  G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
-  if ( analysisManager->IsActive() ) {
-    analysisManager->Write();
-    analysisManager->CloseFile();
-  }
+	//save histograms      
+	G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+	if (analysisManager->IsActive()) {
+		analysisManager->Write();
+		analysisManager->CloseFile();
+	}
 
-  // show Rndm status
-  if (isMaster) G4Random::showEngineStatus();
+	// show Rndm status
+	if (isMaster) G4Random::showEngineStatus();
 
 }
 

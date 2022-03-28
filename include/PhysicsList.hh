@@ -38,20 +38,21 @@
 
 class G4VPhysicsConstructor;
 
-class PhysicsList: public G4VModularPhysicsList
+class PhysicsList : public G4VModularPhysicsList
 {
 public:
 
-    PhysicsList();
-    virtual ~PhysicsList();
+	PhysicsList();
+	virtual ~PhysicsList();
 
-    virtual void ConstructParticle();
-    virtual void ConstructProcess();
+	virtual void ConstructParticle();
+	virtual void ConstructProcess();
 
-    void SetCuts();
+	void SetCuts();
 
 private:
-    G4VPhysicsConstructor* fEmPhysicsList;
+	G4VPhysicsConstructor* fEmPhysicsList;
+	G4VPhysicsConstructor* fParticleList;
 
 };
 

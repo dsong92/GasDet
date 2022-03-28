@@ -43,18 +43,26 @@ class RunAction;
 
 class EventAction : public G4UserEventAction
 {
-  public:
-    EventAction(RunAction* runAction);
-    virtual ~EventAction();
+public:
+	EventAction(RunAction* runAction);
+	virtual ~EventAction();
 
-    virtual void BeginOfEventAction(const G4Event* event);
-    virtual void EndOfEventAction(const G4Event* event);
+	virtual void BeginOfEventAction(const G4Event* event);
+	virtual void EndOfEventAction(const G4Event* event);
 
-  private:
-    RunAction* fRunAction;
-    G4int fCollectionID_A;
-    G4int fCollectionID_B;
+	G4double pos_x_A;
+	G4double pos_x_B;
+	G4double pos_z_A;
+	G4double pos_z_B;
+	G4double Energy_A;
+	G4double Energy_B;
+	G4double Energy_Monitor;
 
+private:
+	RunAction* fRunAction;
+	G4int fCollectionID_A;
+	G4int fCollectionID_B;
+	G4int fCollectionID_BC;
 
 };
 
@@ -62,4 +70,4 @@ class EventAction : public G4UserEventAction
 
 #endif
 
-    
+

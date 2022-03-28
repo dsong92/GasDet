@@ -11,16 +11,16 @@ class G4TouchableHistory;
 class SensitiveDetector : public G4VSensitiveDetector
 {
 public:
-  SensitiveDetector(G4String);
-  ~SensitiveDetector();
+	SensitiveDetector(G4String);
+	~SensitiveDetector();
 
-  void   Initialize(G4HCofThisEvent*);
-  G4bool ProcessHits(G4Step*, G4TouchableHistory*);
-  void   EndOfEvent(G4HCofThisEvent*);
+	void   Initialize(G4HCofThisEvent*);
+	G4bool ProcessHits(G4Step*, G4TouchableHistory*);
+	void   EndOfEvent(G4HCofThisEvent*);
 
 private:
-  EssHitsCollection*   hits;
-  
+	EssHitsCollection* hits;
+
 };
 
 #endif

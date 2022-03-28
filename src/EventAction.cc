@@ -38,15 +38,21 @@
 #include "G4SDManager.hh"
 #include "G4HCofThisEvent.hh"
 
+#include "G4RootAnalysisManager.hh"
+
+
 #include <vector>
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 EventAction::EventAction(RunAction* runAction)
-: G4UserEventAction(),
-  fRunAction(runAction),
-  fCollectionID_A(-1),
-  fCollectionID_B(-1)
-{} 
+	: G4UserEventAction(),
+	fRunAction(runAction),
+	fCollectionID_A(-1),
+	fCollectionID_B(-1),
+	fCollectionID_BC(-1)
+	//pos_x_A(-999),pos_x_B(-999),pos_z_A(-999),pos_z_B(-999),
+	//Energy_A(-999), Energy_B(-999)
+{}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -56,41 +62,48 @@ EventAction::~EventAction()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void EventAction::BeginOfEventAction(const G4Event*)
-{
-	//NumOfElectronIn = 0;
-	//NumOfElectronOut = 0;
-	//EkinIn = 0.;
-	//EkinOut = 0.;
-
-	//Pos_Electron_Electrode_Vec.clear();
-	//Pos_Electron_Frame_Vec.clear();
-}
+{}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 void EventAction::EndOfEventAction(const G4Event* evt)
-{ 
+{
+
 	G4HCofThisEvent* hcte = evt->GetHCofThisEvent();
-	if(!hcte) return;
+	if (!hcte) return;
 
 	G4AnalysisManager* AnalysisManager = G4AnalysisManager::Instance();
 	G4SDManager* SDMan = G4SDManager::GetSDMpointer();
-    fCollectionID_A = SDMan->GetCollectionID("ElectrodeSD_A");
-    fCollectionID_B = SDMan->GetCollectionID("ElectrodeSD_B");
+	fCollectionID_A = SDMan->GetCollectionID("ElectrodeSD_A");
+	fCollectionID_B = SDMan->GetCollectionID("ElectrodeSD_B");
+	fCollectionID_BC = SDMan->GetCollectionID("BeamCheckSD");
 
 	EssHitsCollection* hc_A = 0;
 	hc_A = (EssHitsCollection*)hcte->GetHC(fCollectionID_A);
 	int nHits_A = hc_A->entries();
 	for (G4int j = 0; j < nHits_A; ++j)
 	{
-			EssHit* hit = (*hc_A)[j];
-			G4ThreeVector pos = hit->GetPosition();
-			if(pos.y() != -15) return;
-			G4double Ekin = hit->GetKineticEnergy();
-			AnalysisManager->FillH2(0, pos.x(), pos.z());
-			AnalysisManager->FillH2(1, pos.x(), pos.z());
-			AnalysisManager->FillH1(0, pos.x());
-			AnalysisManager->FillH1(2, pos.z());
-			AnalysisManager->FillH1(4, Ekin);
+		EssHit* hit = (*hc_A)[j];
+		G4ThreeVector pos = hit->GetPosition();
+		if (pos.y() != -15) return;
+		G4double Ekin = hit->GetKineticEnergy();
+
+		AnalysisManager->FillH2(0, pos.x(), pos.z());
+		AnalysisManager->FillH2(1, pos.x(), pos.z());
+		AnalysisManager->FillH1(0, pos.x());
+		AnalysisManager->FillH1(2, pos.z());
+		AnalysisManager->FillH1(4, Ekin);
+		G4int PID = hit->GetParticleId();
+		if (PID != 11) return;
+		AnalysisManager->FillH2(3, pos.x(), pos.z());
+		AnalysisManager->FillH1(6, Ekin);
+
+		/*
+		AnalysisManager->FillH2(0, pos_x_A, pos_z_A);
+		AnalysisManager->FillH2(1, pos_x_A, pos_z_A);
+		AnalysisManager->FillNtupleDColumn(0, pos_x_A);
+		AnalysisManager->FillNtupleDColumn(2, pos_z_A);
+		AnalysisManager->FillNtupleDColumn(4, Energy_A);
+		*/
 	}
 
 	EssHitsCollection* hc_B = 0;
@@ -98,43 +111,42 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 	int nHits_B = hc_B->entries();
 	for (G4int j = 0; j < nHits_B; ++j)
 	{
-			EssHit* hit = (*hc_B)[j];
-			G4ThreeVector pos = hit->GetPosition();
-			if(pos.y() != -15) return;
-			G4double Ekin = hit->GetKineticEnergy();
-			AnalysisManager->FillH2(0, pos.x(), pos.z());
-			AnalysisManager->FillH2(2, pos.x(), pos.z());
-			AnalysisManager->FillH1(1, pos.x());
-			AnalysisManager->FillH1(3, pos.z());
-			AnalysisManager->FillH1(4, Ekin);
+		EssHit* hit = (*hc_B)[j];
+		G4ThreeVector pos = hit->GetPosition();
+		if (pos.y() != -15) return;
+		G4double Ekin = hit->GetKineticEnergy();
+
+		AnalysisManager->FillH2(0, pos.x(), pos.z());
+		AnalysisManager->FillH2(2, pos.x(), pos.z());
+		AnalysisManager->FillH1(1, pos.x());
+		AnalysisManager->FillH1(3, pos.z());
+		AnalysisManager->FillH1(4, Ekin);
+		G4int PID = hit->GetParticleId();
+		if (PID != 11) return;
+		AnalysisManager->FillH2(3, pos.x(), pos.z());
+		AnalysisManager->FillH1(6, Ekin);
+
+		//AnalysisManager->FillH2(0, pos_x_B, pos_z_B);
+		//AnalysisManager->FillH2(2, pos_x_B, pos_z_B);
+		//AnalysisManager->FillNtupleDColumn(1, pos_x_B);
+		//AnalysisManager->FillNtupleDColumn(3, pos_z_B);
+		//AnalysisManager->FillNtupleDColumn(4, Energy_B);
 	}
-	
-	
-	/*
-	G4HCofThisEvent* hcte = evt->GetHCofThisEvent();
-	G4int n_max_hc = G4SDManager::GetSDMpointer()->GetCollectionCapacity();
-	EssHitsCollection* hc = 0;
-	std::cout<<"n_max_hc ->"<<n_max_hc<<std::endl;
-	for (int i = 0; i < n_max_hc; ++i)
+
+	EssHitsCollection* hc_BC = 0;
+	hc_BC = (EssHitsCollection*)hcte->GetHC(fCollectionID_BC); // beam check , thin vacuum SD
+	int nHits_BC = hc_BC->entries();
+	for (G4int j = 0; j < nHits_BC; ++j)
 	{
-			hc = (EssHitsCollection*)hcte->GetHC(i);
-			int nHits = hc->entries();
-			std::cout<<"NHits->"<<n_max_hc<<std::endl;
-
-			for (G4int j = 0; j < nHits; ++j)
-			{
-					EssHit* hit = (*hc)[j];
-					G4ThreeVector pos = hit->GetPosition();
-					if(pos.y() != -15) return;
-					std::cout<<"position--> "<<pos<<std::endl;
-					//std::cout<<"here"<<std::endl;
-					G4AnalysisManager::Instance()->FillH2(0, pos.x(), pos.z());
-					G4AnalysisManager::Instance()->FillH1(0, pos.x());
-					G4AnalysisManager::Instance()->FillH1(1, pos.z());
-
-			}
+		EssHit* hit = (*hc_BC)[j];
+		G4ThreeVector pos = hit->GetPosition();
+		G4int PID = hit->GetParticleId();
+		if (PID != 22 && pos.z() != -47) return;
+		G4double Ekin = hit->GetKineticEnergy();
+		AnalysisManager->FillH1(5, Ekin);
 	}
-	*/
+
+	//AnalysisManager->AddNtupleRow();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
