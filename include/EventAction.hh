@@ -63,6 +63,7 @@ private:
 	G4int fCollectionID_A;
 	G4int fCollectionID_B;
 	G4int fCollectionID_BC;
+	G4int fCollectionID_Pipe;
 
 };
 

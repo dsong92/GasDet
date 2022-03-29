@@ -116,8 +116,8 @@ PhysicsList::PhysicsList()
 
 	// EM physics
 	//fEmPhysicsList = new G4EmStandardPhysics_option1();
-	fEmPhysicsList = new G4EmStandardPhysics_option2();
-	//fEmPhysicsList = new G4EmStandardPhysics_option3();
+	//fEmPhysicsList = new G4EmStandardPhysics_option2();
+	fEmPhysicsList = new G4EmStandardPhysics_option3();
 	//fEmPhysicsList = new G4EmStandardPhysics_option4();
 
 }
@@ -243,7 +243,7 @@ void PhysicsList::SetCuts()
 
 	  // below lines are working but not used now
 	  // Production thresholds for detector regions
-	/*
+
 	G4Region* region;
 	G4String regName;
 	G4ProductionCuts* cuts;
@@ -251,22 +251,28 @@ void PhysicsList::SetCuts()
 	regName = "envelope";
 	region = G4RegionStore::GetInstance()->GetRegion(regName);
 	cuts = new G4ProductionCuts;
-	cuts->SetProductionCut(1*mm); // same cuts for gamma, proton, e- and e+
+	cuts->SetProductionCut(1 * mm); // same cuts for gamma, proton, e- and e+
 	region->SetProductionCuts(cuts);
 
 	regName = "chamber";
 	region = G4RegionStore::GetInstance()->GetRegion(regName);
 	cuts = new G4ProductionCuts;
-	cuts->SetProductionCut(0.1*mm); // same cuts for gamma, proton, e- and e+
+	cuts->SetProductionCut(1 * mm); // same cuts for gamma, proton, e- and e+
+	region->SetProductionCuts(cuts);
+
+	regName = "beampipe";
+	region = G4RegionStore::GetInstance()->GetRegion(regName);
+	cuts = new G4ProductionCuts;
+	cuts->SetProductionCut(1 * mm); // same cuts for gamma, proton, e- and e+
 	region->SetProductionCuts(cuts);
 
 	regName = "electrode";
 	region = G4RegionStore::GetInstance()->GetRegion(regName);
 	cuts = new G4ProductionCuts;
-	cuts->SetProductionCut(1*mm,G4ProductionCuts::GetIndex("gamma"));
-	cuts->SetProductionCut(1*mm,G4ProductionCuts::GetIndex("e-"));
-	cuts->SetProductionCut(1*mm,G4ProductionCuts::GetIndex("e+"));
-	cuts->SetProductionCut(1*mm,G4ProductionCuts::GetIndex("proton"));
+	cuts->SetProductionCut(1 * mm, G4ProductionCuts::GetIndex("gamma"));
+	cuts->SetProductionCut(1 * mm, G4ProductionCuts::GetIndex("e-"));
+	cuts->SetProductionCut(1 * mm, G4ProductionCuts::GetIndex("e+"));
+	cuts->SetProductionCut(1 * mm, G4ProductionCuts::GetIndex("proton"));
 	region->SetProductionCuts(cuts);
-	*/
+
 }

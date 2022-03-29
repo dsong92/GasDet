@@ -81,6 +81,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	G4double fChamber_SizeXY = 1.5 * cm;
 	G4double fChamber_SizeZ = 5. * cm;
 
+	G4double fPipeForElectron_SizeXY = 1.5 * mm;
+	G4double fPipeForElectron_SizeZ = 49.5 * mm;
+
 	G4double fBeamCheck_SizeXY = 1.499 * cm;
 	G4double fBeamCheck_SizeZ = 0.01 * cm;
 
@@ -97,9 +100,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	//G4double temperature = CLHEP::STP_Temperature;
 	G4double temperature = 300 * kelvin;
 
-
 	G4double pressure = 1e-0 * hep_pascal;
-	double Xe_density = 5.252e-5 * mg / cm3;
+	G4double Xe_density = 5.252e-5 * mg / cm3;
+
+	//G4double pressure = 1e-1 * hep_pascal;
+	//double Xe_density = 5.252e-6 * mg / cm3;
 
 	//G4double pressure = 1e-1 * hep_pascal;
 	//double Xe_density = 5.252e-6 * mg / cm3;
@@ -282,6 +287,9 @@ G4VPhysicalVolume* fPhysElectrode =
 	SensitiveDetector* SD_BeamCheck = new SensitiveDetector("BeamCheckSD");
 	SDman->AddNewDetector(SD_BeamCheck);
 
+	SensitiveDetector* SD_PipeForElectron = new SensitiveDetector("SDForElectron");
+	SDman->AddNewDetector(SD_PipeForElectron);
+
 	std::vector<G4TwoVector> verticesA = { {10,10}, {-10,-10}, {-10,10} };
 	std::vector<G4TwoVector> verticesB = { {10,10}, {-10,-10}, { 10,10} };
 
@@ -303,7 +311,8 @@ G4VPhysicalVolume* fPhysElectrode =
 			fCopper,
 			//fVacuum,
 			"ElectrodeA",
-			0, SD_A);
+			0,
+			SD_A);
 
 	G4RotationMatrix RotMatA = G4RotationMatrix();
 	RotMatA.rotateX(90 * deg);
@@ -318,7 +327,7 @@ G4VPhysicalVolume* fPhysElectrode =
 		fLogicElectrodeA,
 		fPhysEnv,
 		false,
-		0,
+		1,
 		checkOverlaps);
 
 	G4LogicalVolume* fLogicElectrodeB =
@@ -326,7 +335,8 @@ G4VPhysicalVolume* fPhysElectrode =
 			fCopper,
 			//fVacuum,
 			"ElectrodeB",
-			0, SD_B);
+			0,
+			SD_B);
 
 	G4RotationMatrix RotMatB = G4RotationMatrix();
 	RotMatB.rotateX(90 * deg);
@@ -341,9 +351,34 @@ G4VPhysicalVolume* fPhysElectrode =
 		fLogicElectrodeB,
 		fPhysEnv,
 		false,
-		0,
+		2,
 		checkOverlaps);
 
+	
+	G4Box* fSolidSDforElec =
+		new G4Box("SDforElec",
+			fPipeForElectron_SizeXY,
+			fPipeForElectron_SizeXY,
+			fPipeForElectron_SizeZ);
+
+	G4LogicalVolume* fLogicSDforElec =
+		new G4LogicalVolume(fSolidSDforElec,
+			fChamber_gas,
+			"SDforElec",
+			0, SD_PipeForElectron);
+
+
+	//G4VPhysicalVolume* PhysiChamber = 
+	new G4PVPlacement(0,
+		G4ThreeVector(0, -13, 0),
+		"Pipe",
+		fLogicSDforElec,
+		PhysiChamber,
+		false,
+		11,
+		checkOverlaps);
+	
+	/*
 	G4Box* fSolidBeamCheck =
 		new G4Box("BeamCheck",
 			fBeamCheck_SizeXY,
@@ -367,9 +402,9 @@ G4VPhysicalVolume* fPhysElectrode =
 		false,
 		0,
 		checkOverlaps);
-
+		*/
 	// set region for SetCuts
-	/*G4String regName[] = {"chamber","electrode", "envelope"};
+	G4String regName[] = { "chamber","electrode", "envelope","beampipe",};
 
 	ChamberRegion = new G4Region(regName[0]);
 	fLogicChamber->SetRegion(ChamberRegion);
@@ -384,7 +419,10 @@ G4VPhysicalVolume* fPhysElectrode =
 	EnvelopeRegion = new G4Region(regName[2]);
 	fLogicEnv->SetRegion(EnvelopeRegion);
 	EnvelopeRegion->AddRootLogicalVolume(fLogicEnv);
-	*/
+
+	PipeRegion = new G4Region(regName[3]);
+	fLogicSDforElec->SetRegion(PipeRegion);
+	PipeRegion->AddRootLogicalVolume(fLogicSDforElec);
 
 	G4cout << *(G4Material::GetMaterialTable()) << G4endl;
 	return fphysWorld;

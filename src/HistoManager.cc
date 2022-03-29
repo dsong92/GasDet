@@ -64,20 +64,27 @@ void HistoManager::Book()
 
 
 	// Define histograms start values
-	const G4int kMaxHisto = 11;
-	const G4String id[] = { "0","1","2","3","4","5","6","7","8","9","10" };
+	const G4int kMaxHisto = 18;
+	const G4String id[] = { "0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17"};
 	const G4String title[] =
 	{ "Position e^{-}, electrode in", // 0
 	 "Position e^{-}, electrode A",  // 1
 	 "Position e^{-}, electrode B",  // 2  
-	 "ElectrodeHitOnlyElec",           // 3
+	 "EkinvsPhi",					// 3
+	 "EkinvsTheta",					//4
+	 "ThetavsPhi",					//5
+	 "dummy",						//6
 	 "Pos_X_e^{-}_Electrode_A",      // 0
 	 "Pos_X_e^{-}_Electrode_B",      // 1
 	 "Pos_Z_e^{-}_Electrode_A",      // 2
 	 "Pos_Z_e^{-}_Electrode_B",      // 3
 	 "E_{kin} of electron, electrode", // 4
 	 "incident gamma energy",          // 5
-	 "ElectrodeEneOnlyElec"            // 6
+	 "ElectrodeEneOnlyElec",           // 6
+	 "Position_X_Profile",            // 7
+	 "Position_Z_Profile",			// 8
+	 "ElectronEnergy",				//9
+	 "Photo-Elec Energy"			//10
 	};
 	// Default values (to be reset via /analysis/h1/set command) 
 	G4int nbins = 100;
@@ -85,7 +92,7 @@ void HistoManager::Book()
 	G4double vmax = 100.;
 
 	for (G4int k = 0; k < kMaxHisto; k++) {
-		if (k < 4) {
+		if (k < 7) {
 			G4int ig = analysisManager->CreateH2(id[k], title[k], nbins, vmin, vmax, nbins, vmin, vmax);
 			analysisManager->SetH2Activation(ig, false);
 		}

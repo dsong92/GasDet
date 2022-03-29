@@ -61,6 +61,7 @@ public:
 	G4Region* ChamberRegion; // cut region
 	G4Region* ElectrodeRegion; // cut region
 	G4Region* EnvelopeRegion; // cut region
+	G4Region* PipeRegion; // cut region
 
 
 protected:
