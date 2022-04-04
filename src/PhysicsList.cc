@@ -234,8 +234,8 @@ void PhysicsList::SetCuts()
 {
 
 	// default production thresholds for the world volume
-	SetCutsWithDefault();
-	//G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(250 * eV, 1 * GeV);
+	//SetCutsWithDefault();
+	G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(1 * eV, 1 * GeV);
 	//SetCutValue(0 * mm, "proton");
 	//SetCutValue(1 * mm, "e-");
 	//SetCutValue(1 * mm, "e+");
@@ -269,10 +269,10 @@ void PhysicsList::SetCuts()
 	regName = "electrode";
 	region = G4RegionStore::GetInstance()->GetRegion(regName);
 	cuts = new G4ProductionCuts;
-	cuts->SetProductionCut(1 * mm, G4ProductionCuts::GetIndex("gamma"));
-	cuts->SetProductionCut(1 * mm, G4ProductionCuts::GetIndex("e-"));
-	cuts->SetProductionCut(1 * mm, G4ProductionCuts::GetIndex("e+"));
-	cuts->SetProductionCut(1 * mm, G4ProductionCuts::GetIndex("proton"));
+	cuts->SetProductionCut(10 * mm, G4ProductionCuts::GetIndex("gamma"));
+	cuts->SetProductionCut(10 * mm, G4ProductionCuts::GetIndex("e-"));
+	cuts->SetProductionCut(10 * mm, G4ProductionCuts::GetIndex("e+"));
+	cuts->SetProductionCut(10 * mm, G4ProductionCuts::GetIndex("proton"));
 	region->SetProductionCuts(cuts);
 
 }

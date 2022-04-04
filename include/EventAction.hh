@@ -57,6 +57,12 @@ public:
 	G4double Energy_A;
 	G4double Energy_B;
 	G4double Energy_Monitor;
+	G4double Phot_Elec_Energy;
+	G4double Phi;
+	G4double Theta;
+	G4double px;
+	G4double py;
+	G4double pz;
 
 private:
 	RunAction* fRunAction;

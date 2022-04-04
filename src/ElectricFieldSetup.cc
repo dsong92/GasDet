@@ -78,7 +78,7 @@ ElectricFieldSetup::ElectricFieldSetup()
    fStepperType(4)    // ClassicalRK4 -- the default stepper
 {
   fEMfield = new G4UniformElectricField(
-                   G4ThreeVector(0.0,0.5*kilovolt/cm,0.0));
+                   G4ThreeVector(0.0,0.0*kilovolt/cm,0.0));
   fEquation = new G4EqMagElectricField(fEMfield);
 
   fFieldManager = GetGlobalFieldManager();

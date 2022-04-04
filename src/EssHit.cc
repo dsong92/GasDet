@@ -15,14 +15,13 @@ EssHit::EssHit(const EssHit& right)
 	position = right.position;
 	momentum = right.momentum;
 	charge = right.charge;
-	//atomicMass = right.atomicMass;
-	//atomicNumber = right.atomicNumber;
 	kineticEnergy = right.kineticEnergy;
-	//add
 	momentumdirection = right.momentumdirection;
 	PhotElecEnergy = right.PhotElecEnergy;
 	copynum = right.copynum;
 	flag = right.flag;
+	stplength = right.stplength;
+	currentStepNum = right.currentStepNum;
 }
 
 const EssHit& EssHit::operator=(const EssHit& right)
@@ -33,14 +32,13 @@ const EssHit& EssHit::operator=(const EssHit& right)
 	position = right.position;
 	momentum = right.momentum;
 	charge = right.charge;
-	//atomicMass = right.atomicMass;
-	//atomicNumber = right.atomicNumber;
 	kineticEnergy = right.kineticEnergy;
-	//add
 	momentumdirection = right.momentumdirection;
 	PhotElecEnergy = right.PhotElecEnergy;
 	copynum = right.copynum;
 	flag = right.flag;
+	stplength = right.stplength;
+	currentStepNum = right.currentStepNum;
 	return *this;
 }
 
