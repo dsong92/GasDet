@@ -23,14 +23,13 @@ public:
 	void SetPosition(G4ThreeVector ipos) { position = ipos; };
 	void SetMomentum(G4ThreeVector imom) { momentum = imom; };
 	void SetCharge(G4double icharge) { charge = icharge; };
-	void SetAtomicNumber(G4double iatomicNumber) { atomicNumber = iatomicNumber; };
-	void SetAtomicMass(G4double iatomicMass) { atomicMass = iatomicMass; };
 	void SetKineticEnergy(G4double ikineticEnergy) { kineticEnergy = ikineticEnergy; };
-	//add
 	void SetMomentumDirection(G4ThreeVector imomentumdirection) { momentumdirection = imomentumdirection; };
 	void SetPhotoElecEnergy(G4double iPhotElecEnergy) { PhotElecEnergy = iPhotElecEnergy; };
 	void SetCopyNumber(G4int icopynum) { copynum = icopynum; };
 	void SetFlag(G4bool iflag) { flag = iflag; };
+	void SetStepLength(G4double istplength) { stplength = istplength; };
+	void SetCurrentStepNum(G4int icurrentStepNum) { currentStepNum = icurrentStepNum; };
 
 	G4int GetParticleId() { return particleId; };
 	G4int GetTrackId() { return trackId; };
@@ -38,14 +37,13 @@ public:
 	G4ThreeVector GetPosition() { return position; };
 	G4ThreeVector GetMomentum() { return momentum; };
 	G4double GetCharge() { return charge; };
-	G4double GetAtomicNumber() { return atomicNumber; };
-	G4double GetAtomicMass() { return atomicMass; };
 	G4double GetKineticEnergy() { return kineticEnergy; };
-	//add
 	G4ThreeVector GetMomentumDirection() { return momentumdirection; };
 	G4double GetPhotoElecEnergy() { return PhotElecEnergy; };
-	G4int GetCopyNumber() { return copynum;  };
+	G4int GetCopyNumber() { return copynum; };
 	G4bool GetFlag() { return flag; };
+	G4double GetStepLength() { return stplength; };
+	G4int GetCurrentStepNum() { return currentStepNum; };
 
 private:
 	G4int          particleId;
@@ -54,14 +52,13 @@ private:
 	G4ThreeVector  position;
 	G4ThreeVector  momentum;
 	G4double       charge;
-	G4int          atomicNumber;
-	G4int          atomicMass;
 	G4double       kineticEnergy;
-	//add
 	G4ThreeVector  momentumdirection;
 	G4double	   PhotElecEnergy;
 	G4int		   copynum;
 	G4bool		   flag;
+	G4double	   stplength;
+	G4int		   currentStepNum;
 };
 
 typedef G4THitsCollection<EssHit> EssHitsCollection;

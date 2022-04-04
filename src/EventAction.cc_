@@ -39,7 +39,6 @@
 #include "G4HCofThisEvent.hh"
 
 #include "G4RootAnalysisManager.hh"
-#include "G4UnitsTable.hh"
 
 
 #include <vector>
@@ -52,7 +51,7 @@ EventAction::EventAction(RunAction* runAction)
 	fCollectionID_B(-1),
 	fCollectionID_BC(-1),
 	fCollectionID_Pipe(-1),
-	pos_x_A(-999), pos_x_B(-999), pos_z_A(-999), pos_z_B(-999), px(-999), py(-999), pz(-999),
+	pos_x_A(-999), pos_x_B(-999), pos_z_A(-999), pos_z_B(-999),
 	Energy_A(-999), Energy_B(-999), Phot_Elec_Energy(-999), Phi(-999), Theta(-999)
 {}
 
@@ -64,10 +63,7 @@ EventAction::~EventAction()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void EventAction::BeginOfEventAction(const G4Event*)
-{
-	//pos_x_A = -999; pos_x_B = -999; pos_z_A = -999; pos_z_B = -999;
-	//Energy_A = -999; Energy_B = -999; Phot_Elec_Energy = -999; Phi = -999; Theta = -999;
-}
+{}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 void EventAction::EndOfEventAction(const G4Event* evt)
@@ -83,7 +79,6 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 	fCollectionID_B = SDMan->GetCollectionID("ElectrodeSD_B");
 	//fCollectionID_BC = SDMan->GetCollectionID("BeamCheckSD");
 	fCollectionID_Pipe = SDMan->GetCollectionID("SDForElectron");
-	//AnalysisManager->FillNtupleIColumn(6, evt->GetEventID());
 
 	EssHitsCollection* hc_A = 0;
 	hc_A = (EssHitsCollection*)hcte->GetHC(fCollectionID_A);
@@ -91,59 +86,79 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 	for (G4int j = 0; j < nHits_A; ++j)
 	{
 		EssHit* hit = (*hc_A)[j];
-		G4int PID = hit->GetParticleId();
-		G4ThreeVector pos = hit->GetPosition();
-		G4int copynumber = hit->GetCopyNumber();
-		//G4bool FirstStepInVolume = hit->GetFlag();
-		
 		// The surface of electrode start y = -15 to -16
-		if (PID == 11 && pos.y() == -15 && copynumber == 3) {
-			pos_x_A = pos.x();
-			pos_z_A = pos.z();
-			Energy_A = hit->GetKineticEnergy();
-			
-			AnalysisManager->FillH1(0, pos_x_A);
-			AnalysisManager->FillH1(2, pos_z_A);
-			AnalysisManager->FillH1(4, Energy_A);
-			AnalysisManager->FillH1(7, pos_x_A);
-			AnalysisManager->FillH1(8, pos_z_A);
-			AnalysisManager->FillH2(0, pos_x_A, pos_z_A);
-			AnalysisManager->FillH2(1, pos_x_A, pos_z_A);
+		G4ThreeVector pos = hit->GetPosition();
+		if (pos.y() != -15) return;
+		// only save values from first step in volume
+		G4bool FirstStepInVolume = hit->GetFlag();
+		if (FirstStepInVolume == false) return;
+		pos_x_A = pos.x();
+		pos_z_A = pos.z();
+		Energy_A = hit->GetKineticEnergy();
+		/*G4cout << "HERE X --> " << pos_x_A << "  ||  Z --> " << pos_z_A << G4endl;
+		G4cout << "Copynum --> " << hit->GetCopyNumber() << G4endl;
+		G4cout << "evtID --> " << evt->GetEventID() << G4endl;
+		G4cout << "PDG  --> " << hit->GetParticleId() << G4endl;
+		G4cout << "Deposit E --> " << hit->GetEdeposit() << G4endl;
+		G4cout << "StepLength --> " << hit->GetStepLength() << G4endl;*/
+		
+		AnalysisManager->FillH1(0, pos.x());
+		AnalysisManager->FillH1(2, pos.z());
+		AnalysisManager->FillH1(4, Energy_A);
+		AnalysisManager->FillH1(7, pos.x());
+		AnalysisManager->FillH1(8, pos.z());
+		AnalysisManager->FillH2(0, pos_x_A, pos_z_A);
+		AnalysisManager->FillH2(1, pos_x_A, pos_z_A);
 
-			AnalysisManager->FillNtupleDColumn(0, 0, pos_x_A);
-			AnalysisManager->FillNtupleDColumn(0, 1, pos_z_A);
-			AnalysisManager->AddNtupleRow(0);
-		}
+		AnalysisManager->FillNtupleDColumn(0, pos_x_A);
+		AnalysisManager->FillNtupleDColumn(2, pos_z_A);
+		AnalysisManager->FillNtupleDColumn(4, Energy_A);
+		AnalysisManager->FillNtupleDColumn(7, pos_x_A);
+		AnalysisManager->FillNtupleDColumn(8, pos_z_A);
+		//G4int PID = hit->GetParticleId();
+		//G4int copynumber = hit->GetCopyNumber();
+		//if (PID == 11 && copynumber == 1 ) {
+			//AnalysisManager->FillH1(6, Ekin);
+			//AnalysisManager->FillNtupleDColumn(6, Energy_A);
+		//}
+		//pos_x_A = -999; pos_z_A = -999; Energy_A = -999;
 	}
-
 	EssHitsCollection* hc_B = 0;
 	hc_B = (EssHitsCollection*)hcte->GetHC(fCollectionID_B);
 	int nHits_B = hc_B->entries();
 	for (G4int j = 0; j < nHits_B; ++j)
 	{
 		EssHit* hit = (*hc_B)[j];
-		G4int PID = hit->GetParticleId();
 		G4ThreeVector pos = hit->GetPosition();
-		G4int copynumber = hit->GetCopyNumber();
+		if (pos.y() != -15) return;
 		G4bool FirstStepInVolume = hit->GetFlag();
+		if (FirstStepInVolume == false) return;
+
+		pos_x_B = pos.x();
+		pos_z_B = pos.z();
+		Energy_B = hit->GetKineticEnergy();
 		
-		if (PID == 11 && pos.y() == -15 && copynumber == 4) {
-			pos_x_B = pos.x();
-			pos_z_B = pos.z();
-			Energy_B = hit->GetKineticEnergy();
+		AnalysisManager->FillH1(1, pos.x());
+		AnalysisManager->FillH1(3, pos.z());
+		AnalysisManager->FillH1(4, Energy_B);
+		AnalysisManager->FillH1(7, pos.x());
+		AnalysisManager->FillH1(8, pos.z());
+		AnalysisManager->FillH2(0, pos_x_B, pos_z_B);
+		AnalysisManager->FillH2(2, pos_x_B, pos_z_B);
 
-			AnalysisManager->FillH1(1, pos_x_B);
-			AnalysisManager->FillH1(3, pos_z_B);
-			AnalysisManager->FillH1(4, Energy_B);
-			AnalysisManager->FillH1(7, pos_x_B);
-			AnalysisManager->FillH1(8, pos_z_B);
-			AnalysisManager->FillH2(0, pos_x_B, pos_z_B);
-			AnalysisManager->FillH2(2, pos_x_B, pos_z_B);
+		AnalysisManager->FillNtupleDColumn(1, pos_x_B);
+		AnalysisManager->FillNtupleDColumn(3, pos_z_B);
+		AnalysisManager->FillNtupleDColumn(4, Energy_B);
+		AnalysisManager->FillNtupleDColumn(7, pos_x_B);
+		AnalysisManager->FillNtupleDColumn(8, pos_z_B);
 
-			AnalysisManager->FillNtupleDColumn(1, 0, pos_x_B);
-			AnalysisManager->FillNtupleDColumn(1, 1, pos_z_B);
-			AnalysisManager->AddNtupleRow(1);
-		}
+		//G4int PID = hit->GetParticleId();
+		//G4int copynumber = hit->GetCopyNumber();
+		//if (PID == 11 && copynumber == 2) {
+			//AnalysisManager->FillH1(6, Ekin);
+			//AnalysisManager->FillNtupleDColumn(6, Energy_B);
+		//}
+		//pos_x_B = -999; pos_z_B = -999; Energy_B = -999;
 	}
 
 
@@ -156,33 +171,20 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 		G4ThreeVector pos = hit->GetPosition();
 		G4int copynumber = hit->GetCopyNumber();
 		G4int PID = hit->GetParticleId();
+		//G4cout << "here--Ekin --> " << hit->GetKineticEnergy() << G4endl;
 		G4bool FirstStepInVolume = hit->GetFlag();
-
 		if (PID == 11 && copynumber == 11 && FirstStepInVolume == true) {
 
-			//Phot_Elec_Energy = hit->GetPhotoElecEnergy();
-			Phot_Elec_Energy = hit->GetKineticEnergy();
+			Phot_Elec_Energy = hit->GetPhotoElecEnergy();
 			Phi = hit->GetMomentumDirection().getPhi() * (180 / CLHEP::pi);
 			Theta = hit->GetMomentumDirection().getTheta() * (180 / CLHEP::pi);
-			px = hit->GetMomentum().x();
-			py = hit->GetMomentum().y();
-			pz = hit->GetMomentum().z();
 
 			AnalysisManager->FillH1(10, Phot_Elec_Energy);
-			AnalysisManager->FillH1(11, Phi);
 			AnalysisManager->FillH2(3, Phi, Phot_Elec_Energy);
 			AnalysisManager->FillH2(4, Theta, Phot_Elec_Energy);
 			AnalysisManager->FillH2(5, Theta, Phi);
 
-			AnalysisManager->FillNtupleDColumn(2, 0, Phot_Elec_Energy);
-			AnalysisManager->FillNtupleDColumn(2, 1, px);
-			AnalysisManager->FillNtupleDColumn(2, 2, py);
-			AnalysisManager->FillNtupleDColumn(2, 3, pz);
-			AnalysisManager->FillNtupleDColumn(2, 4, Phi);
-
-			G4double pt = std::sqrt((px * px) + (py * py));
-			AnalysisManager->FillNtupleDColumn(2, 5, pt);
-			AnalysisManager->AddNtupleRow(2);
+			AnalysisManager->FillNtupleDColumn(10, Phot_Elec_Energy);
 		}
 	}
 
@@ -201,6 +203,18 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 	}
 	*/
 
+	//AnalysisManager->FillNtupleDColumn(0, -999);
+	//AnalysisManager->FillNtupleDColumn(1, -999);
+	//AnalysisManager->FillNtupleDColumn(2, -999);
+	//AnalysisManager->FillNtupleDColumn(3, -999);
+	//AnalysisManager->FillNtupleDColumn(4, -999);
+	// column id = 5 is for containing beam energy but not use now
+	// column id = 6,9 is dummy
+	//AnalysisManager->FillNtupleDColumn(7, -999);
+	//AnalysisManager->FillNtupleDColumn(8, -999);
+	//AnalysisManager->FillNtupleDColumn(10, -999);
+
+	AnalysisManager->AddNtupleRow();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

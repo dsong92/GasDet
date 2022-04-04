@@ -327,7 +327,7 @@ G4VPhysicalVolume* fPhysElectrode =
 		fLogicElectrodeA,
 		fPhysEnv,
 		false,
-		1,
+		3,
 		checkOverlaps);
 
 	G4LogicalVolume* fLogicElectrodeB =
@@ -351,7 +351,7 @@ G4VPhysicalVolume* fPhysElectrode =
 		fLogicElectrodeB,
 		fPhysEnv,
 		false,
-		2,
+		4,
 		checkOverlaps);
 
 	
