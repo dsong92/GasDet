@@ -52,10 +52,13 @@ public:
 
 	G4double pos_x_A;
 	G4double pos_x_B;
+	G4double pos_x_BC;
 	G4double pos_z_A;
 	G4double pos_z_B;
+	G4double pos_y_BC;
 	G4double Energy_A;
 	G4double Energy_B;
+	G4double Energy_BC;
 	G4double Energy_Monitor;
 	G4double Phot_Elec_Energy;
 	G4double Phi;
@@ -63,7 +66,11 @@ public:
 	G4double px;
 	G4double py;
 	G4double pz;
-
+	G4int    TrackID_A;
+	G4int    TrackID_B;
+	G4int    TrackID_BC;
+	G4int    TrackID_Pipe;
+	
 private:
 	RunAction* fRunAction;
 	G4int fCollectionID_A;

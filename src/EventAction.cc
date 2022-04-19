@@ -53,7 +53,7 @@ EventAction::EventAction(RunAction* runAction)
 	fCollectionID_BC(-1),
 	fCollectionID_Pipe(-1),
 	pos_x_A(-999), pos_x_B(-999), pos_z_A(-999), pos_z_B(-999), px(-999), py(-999), pz(-999),
-	Energy_A(-999), Energy_B(-999), Phot_Elec_Energy(-999), Phi(-999), Theta(-999)
+	Energy_A(-999), Energy_B(-999), Phot_Elec_Energy(-999), Phi(-999), Theta(-999), TrackID_A(-1), TrackID_B(-1)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -75,16 +75,43 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 	G4HCofThisEvent* hcte = evt->GetHCofThisEvent();
 	if (!hcte) return;
 
-	//G4AnalysisManager* AnalysisManager = G4AnalysisManager::Instance(); // Just Histogram
+	//G4AnalysisManager* AnalysisManager = G4AnalysisManager::Instance();
 	G4RootAnalysisManager* AnalysisManager = G4RootAnalysisManager::Instance();
 
 	G4SDManager* SDMan = G4SDManager::GetSDMpointer();
 	fCollectionID_A = SDMan->GetCollectionID("ElectrodeSD_A");
 	fCollectionID_B = SDMan->GetCollectionID("ElectrodeSD_B");
-	//fCollectionID_BC = SDMan->GetCollectionID("BeamCheckSD");
+	fCollectionID_BC = SDMan->GetCollectionID("BeamCheckSD");
 	fCollectionID_Pipe = SDMan->GetCollectionID("SDForElectron");
 	//AnalysisManager->FillNtupleIColumn(6, evt->GetEventID());
 
+	// Hit Collection in BeamCheck, for chekcing incident beam information
+	EssHitsCollection* hc_BC = 0;
+	hc_BC = (EssHitsCollection*)hcte->GetHC(fCollectionID_BC);
+	int nHits_BC = hc_BC->entries();
+	for (G4int j = 0; j < nHits_BC; ++j)
+	{
+		EssHit* hit = (*hc_BC)[j];
+		G4int PID = hit->GetParticleId();
+		//G4bool FirstStepInVolume = hit->GetFlag();
+		TrackID_BC = hit->GetTrackId();
+
+		// The surface of electrode start y = -15 to -16 ,
+		if (PID == 22 && TrackID_BC == 1) {
+			G4ThreeVector pos = hit->GetPosition();
+			pos_x_BC = pos.x();
+			pos_y_BC = pos.y();
+			Energy_BC = hit->GetKineticEnergy();
+
+			//AnalysisManager->FillH1(5, Energy_BC);
+			AnalysisManager->FillH1(6, pos_x_BC);
+			AnalysisManager->FillH1(7, pos_y_BC);
+
+		}
+	}
+
+
+	// Hit Collection in Electrode_A
 	EssHitsCollection* hc_A = 0;
 	hc_A = (EssHitsCollection*)hcte->GetHC(fCollectionID_A);
 	int nHits_A = hc_A->entries();
@@ -93,20 +120,28 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 		EssHit* hit = (*hc_A)[j];
 		G4int PID = hit->GetParticleId();
 		G4ThreeVector pos = hit->GetPosition();
-		G4int copynumber = hit->GetCopyNumber();
 		//G4bool FirstStepInVolume = hit->GetFlag();
-		
-		// The surface of electrode start y = -15 to -16
-		if (PID == 11 && pos.y() == -15 && copynumber == 3) {
+		//TrackID_A = hit->GetTrackId();
+
+		// The surface of electrode start y = -15 to -16 ,
+		if (PID == 11 && pos.y() == -15) {
+
 			pos_x_A = pos.x();
 			pos_z_A = pos.z();
 			Energy_A = hit->GetKineticEnergy();
-			
+
+			//G4cout << "-------------------------------------------------------------" << G4endl;
+			//G4cout << "Position from Track     --> " << hit->GetPositionT() << G4endl;
+			//G4cout << "Position from StepPoint --> " << hit->GetPosition() << G4endl;
+			//G4cout << "Energy from Track --> " << hit->GetKineticEnergyT() << G4endl;
+			//G4cout << "Energy from StepPoint --> " << hit->GetKineticEnergy() << G4endl;
+
 			AnalysisManager->FillH1(0, pos_x_A);
 			AnalysisManager->FillH1(2, pos_z_A);
 			AnalysisManager->FillH1(4, Energy_A);
-			AnalysisManager->FillH1(7, pos_x_A);
-			AnalysisManager->FillH1(8, pos_z_A);
+			AnalysisManager->FillH1(8, pos_x_A);
+			AnalysisManager->FillH1(9, pos_z_A);
+
 			AnalysisManager->FillH2(0, pos_x_A, pos_z_A);
 			AnalysisManager->FillH2(1, pos_x_A, pos_z_A);
 
@@ -116,6 +151,7 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 		}
 	}
 
+	// Hit Collection in Electrode_B
 	EssHitsCollection* hc_B = 0;
 	hc_B = (EssHitsCollection*)hcte->GetHC(fCollectionID_B);
 	int nHits_B = hc_B->entries();
@@ -124,10 +160,11 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 		EssHit* hit = (*hc_B)[j];
 		G4int PID = hit->GetParticleId();
 		G4ThreeVector pos = hit->GetPosition();
-		G4int copynumber = hit->GetCopyNumber();
-		G4bool FirstStepInVolume = hit->GetFlag();
-		
-		if (PID == 11 && pos.y() == -15 && copynumber == 4) {
+		//G4bool FirstStepInVolume = hit->GetFlag();
+		//TrackID_B = hit->GetTrackId();
+
+		if (PID == 11 && pos.y() == -15) {
+
 			pos_x_B = pos.x();
 			pos_z_B = pos.z();
 			Energy_B = hit->GetKineticEnergy();
@@ -135,8 +172,9 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 			AnalysisManager->FillH1(1, pos_x_B);
 			AnalysisManager->FillH1(3, pos_z_B);
 			AnalysisManager->FillH1(4, Energy_B);
-			AnalysisManager->FillH1(7, pos_x_B);
-			AnalysisManager->FillH1(8, pos_z_B);
+			AnalysisManager->FillH1(8, pos_x_B);
+			AnalysisManager->FillH1(9, pos_z_B);
+
 			AnalysisManager->FillH2(0, pos_x_B, pos_z_B);
 			AnalysisManager->FillH2(2, pos_x_B, pos_z_B);
 
@@ -146,7 +184,7 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 		}
 	}
 
-
+	// Hit Collection in pipe, pipe is thin and long sensitive detector having same material to chamber. 
 	EssHitsCollection* hc_Pipe = 0;
 	hc_Pipe = (EssHitsCollection*)hcte->GetHC(fCollectionID_Pipe);
 	int nHits_Pipe = hc_Pipe->entries();
@@ -154,11 +192,12 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 	{
 		EssHit* hit = (*hc_Pipe)[j];
 		G4ThreeVector pos = hit->GetPosition();
-		G4int copynumber = hit->GetCopyNumber();
 		G4int PID = hit->GetParticleId();
-		G4bool FirstStepInVolume = hit->GetFlag();
+		TrackID_Pipe = hit->GetTrackId();
+		//G4bool FirstStepInVolume = hit->GetFlag();
+		//G4int copynumber = hit->GetCopyNumber();
 
-		if (PID == 11 && copynumber == 11 && FirstStepInVolume == true) {
+		if (PID == 11 && TrackID_Pipe == 1) {
 
 			//Phot_Elec_Energy = hit->GetPhotoElecEnergy();
 			Phot_Elec_Energy = hit->GetKineticEnergy();
@@ -168,38 +207,27 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 			py = hit->GetMomentum().y();
 			pz = hit->GetMomentum().z();
 
+			AnalysisManager->FillH1(5, Phot_Elec_Energy);
 			AnalysisManager->FillH1(10, Phot_Elec_Energy);
 			AnalysisManager->FillH1(11, Phi);
+			AnalysisManager->FillH1(14, pos.z());
 			AnalysisManager->FillH2(3, Phi, Phot_Elec_Energy);
 			AnalysisManager->FillH2(4, Theta, Phot_Elec_Energy);
 			AnalysisManager->FillH2(5, Theta, Phi);
 
+
 			AnalysisManager->FillNtupleDColumn(2, 0, Phot_Elec_Energy);
-			AnalysisManager->FillNtupleDColumn(2, 1, px);
-			AnalysisManager->FillNtupleDColumn(2, 2, py);
-			AnalysisManager->FillNtupleDColumn(2, 3, pz);
-			AnalysisManager->FillNtupleDColumn(2, 4, Phi);
+			//AnalysisManager->FillNtupleDColumn(2, 1, px);
+			//AnalysisManager->FillNtupleDColumn(2, 2, py);
+			//AnalysisManager->FillNtupleDColumn(2, 3, pz);
+			//AnalysisManager->FillNtupleDColumn(2, 4, Phi);
+			//AnalysisManager->FillNtupleDColumn(2, 6, pos.z());
 
 			G4double pt = std::sqrt((px * px) + (py * py));
 			AnalysisManager->FillNtupleDColumn(2, 5, pt);
 			AnalysisManager->AddNtupleRow(2);
 		}
 	}
-
-	/*
-	EssHitsCollection* hc_BC = 0;
-	hc_BC = (EssHitsCollection*)hcte->GetHC(fCollectionID_BC); // beam check , thin vacuum SD
-	int nHits_BC = hc_BC->entries();
-	for (G4int j = 0; j < nHits_BC; ++j)
-	{
-		EssHit* hit = (*hc_BC)[j];
-		G4ThreeVector pos = hit->GetPosition();
-		G4int PID = hit->GetParticleId();
-		if (PID != 22 && pos.z() != -47) return;
-		G4double Ekin = hit->GetKineticEnergy();
-		AnalysisManager->FillH1(5, Ekin);
-	}
-	*/
 
 }
 
