@@ -24,12 +24,14 @@ public:
 	void SetMomentum(G4ThreeVector imom) { momentum = imom; };
 	void SetCharge(G4double icharge) { charge = icharge; };
 	void SetKineticEnergy(G4double ikineticEnergy) { kineticEnergy = ikineticEnergy; };
+	void SetKineticEnergyT(G4double ikineticEnergyT) { kineticEnergyT = ikineticEnergyT; };	// "T" means this variable is extracted from Track
 	void SetMomentumDirection(G4ThreeVector imomentumdirection) { momentumdirection = imomentumdirection; };
 	void SetPhotoElecEnergy(G4double iPhotElecEnergy) { PhotElecEnergy = iPhotElecEnergy; };
 	void SetCopyNumber(G4int icopynum) { copynum = icopynum; };
 	void SetFlag(G4bool iflag) { flag = iflag; };
 	void SetStepLength(G4double istplength) { stplength = istplength; };
 	void SetCurrentStepNum(G4int icurrentStepNum) { currentStepNum = icurrentStepNum; };
+	void SetPositionT(G4ThreeVector iposT) { position_T = iposT; };
 
 	G4int GetParticleId() { return particleId; };
 	G4int GetTrackId() { return trackId; };
@@ -38,12 +40,14 @@ public:
 	G4ThreeVector GetMomentum() { return momentum; };
 	G4double GetCharge() { return charge; };
 	G4double GetKineticEnergy() { return kineticEnergy; };
+	G4double GetKineticEnergyT() { return kineticEnergyT; };
 	G4ThreeVector GetMomentumDirection() { return momentumdirection; };
 	G4double GetPhotoElecEnergy() { return PhotElecEnergy; };
 	G4int GetCopyNumber() { return copynum; };
 	G4bool GetFlag() { return flag; };
 	G4double GetStepLength() { return stplength; };
 	G4int GetCurrentStepNum() { return currentStepNum; };
+	G4ThreeVector GetPositionT() { return position_T; };
 
 private:
 	G4int          particleId;
@@ -53,12 +57,16 @@ private:
 	G4ThreeVector  momentum;
 	G4double       charge;
 	G4double       kineticEnergy;
+	G4double	   kineticEnergyT;
 	G4ThreeVector  momentumdirection;
 	G4double	   PhotElecEnergy;
 	G4int		   copynum;
 	G4bool		   flag;
 	G4double	   stplength;
 	G4int		   currentStepNum;
+	// tmp variable for checking difference of track and steppoint position
+	G4ThreeVector  position_T;
+
 };
 
 typedef G4THitsCollection<EssHit> EssHitsCollection;

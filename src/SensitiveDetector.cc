@@ -10,13 +10,13 @@
 #include "SensitiveDetector.hh"
 
 SensitiveDetector::SensitiveDetector(G4String name)
-:G4VSensitiveDetector(name)
+	:G4VSensitiveDetector(name)
 {
-  collectionName.insert(name.c_str());
+	collectionName.insert(name.c_str());
 }
 
 
-SensitiveDetector::~SensitiveDetector(){ }
+SensitiveDetector::~SensitiveDetector() { }
 
 
 void SensitiveDetector::Initialize(G4HCofThisEvent* hce)
@@ -24,41 +24,42 @@ void SensitiveDetector::Initialize(G4HCofThisEvent* hce)
 	hits = new EssHitsCollection(SensitiveDetectorName, collectionName[0]);
 
 	hce->AddHitsCollection(
-	  (G4int)G4SDManager::GetSDMpointer()->GetCollectionID(collectionName[0]),
-	  hits);
-  
+		(G4int)G4SDManager::GetSDMpointer()->GetCollectionID(collectionName[0]),
+		hits);
+
 }
 
 
 G4bool SensitiveDetector::ProcessHits(G4Step* stp, G4TouchableHistory*)
 {
-  G4Track* trk = stp->GetTrack();
+	G4Track* trk = stp->GetTrack();
 
-  //if( stp->GetStepLength() < 1e-2 * CLHEP::mm) stp->GetTrack()->SetTrackStatus(fStopAndKill);
-  
-  EssHit* ht;
-  ht = new EssHit();
+	//if( stp->GetStepLength() < 1e-2 * CLHEP::mm) stp->GetTrack()->SetTrackStatus(fStopAndKill);
 
-  ht->SetParticleId(trk->GetDefinition()->GetPDGEncoding());
-  ht->SetTrackId(trk->GetTrackID());
-  ht->SetEdeposit(stp->GetTotalEnergyDeposit());
-  ht->SetPosition(trk->GetPosition());
-  //ht->SetMomentum(trk->GetMomentum());
-  ht->SetMomentum(stp->GetPreStepPoint()->GetMomentum());
-  ht->SetCharge(trk->GetDynamicParticle()->GetCharge());
-  //ht->SetKineticEnergy(trk->GetKineticEnergy());
-  ht->SetKineticEnergy(stp->GetPreStepPoint()->GetKineticEnergy());
-  
-  //ht->SetMomentumDirection(trk->GetMomentumDirection());
-  ht->SetMomentumDirection(stp->GetPreStepPoint()->GetMomentumDirection());
-  ht->SetPhotoElecEnergy(stp->GetPreStepPoint()->GetKineticEnergy());
-  ht->SetCopyNumber(trk->GetTouchable()->GetCopyNumber());
-  ht->SetFlag(stp->IsFirstStepInVolume());
-  ht->SetStepLength(stp->GetStepLength());
-  ht->SetCurrentStepNum(trk->GetCurrentStepNumber());
-  hits->insert(ht);
+	EssHit* ht;
+	ht = new EssHit();
 
-  return true;
+	ht->SetParticleId(trk->GetDefinition()->GetPDGEncoding());
+	ht->SetTrackId(trk->GetTrackID());
+	ht->SetEdeposit(stp->GetTotalEnergyDeposit());
+	//ht->SetPositionT(trk->GetPosition());
+	ht->SetPosition(stp->GetPreStepPoint()->GetPosition());
+	//ht->SetPosition(stp->GetPostStepPoint()->GetPosition());
+	//ht->SetMomentum(trk->GetMomentum());
+	ht->SetMomentum(stp->GetPreStepPoint()->GetMomentum());
+	ht->SetCharge(trk->GetDynamicParticle()->GetCharge());
+	ht->SetKineticEnergy(stp->GetPreStepPoint()->GetKineticEnergy());
+	ht->SetKineticEnergyT(trk->GetKineticEnergy());
+	//ht->SetMomentumDirection(trk->GetMomentumDirection());
+	ht->SetMomentumDirection(stp->GetPreStepPoint()->GetMomentumDirection());
+	ht->SetPhotoElecEnergy(stp->GetPreStepPoint()->GetKineticEnergy());
+	ht->SetCopyNumber(stp->GetPreStepPoint()->GetTouchable()->GetCopyNumber());
+	ht->SetFlag(stp->IsFirstStepInVolume());
+	ht->SetStepLength(stp->GetStepLength());
+	ht->SetCurrentStepNum(trk->GetCurrentStepNumber());
+	hits->insert(ht);
+
+	return true;
 }
 
 

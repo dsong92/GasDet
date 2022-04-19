@@ -75,17 +75,20 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	// Get nist material manager
 	G4NistManager* nist = G4NistManager::Instance();
 
-	G4double env_sizeXY = 0.5 * cm;
-	G4double env_sizeZ = 5 * cm;
+	//G4double fChamber_SizeXY = 1.5 * cm;
+	//G4double fChamber_SizeZ = 5. * cm;
 
-	G4double fChamber_SizeXY = 1.5 * cm;
-	G4double fChamber_SizeZ = 5. * cm;
+	G4double fChamber_SizeX = 3 * cm;
+	G4double fChamber_SizeY = 1.5 * cm;
+	G4double fChamber_SizeZ = 15. * cm;
 
-	G4double fPipeForElectron_SizeXY = 1.5 * mm;
-	G4double fPipeForElectron_SizeZ = 49.5 * mm;
+	G4double fPipeForElectron_SizeX = 12.0 * mm;
+	G4double fPipeForElectron_SizeY = 12.0 * mm;
+	G4double fPipeForElectron_SizeZ = 149.5 * mm;
 
-	G4double fBeamCheck_SizeXY = 1.499 * cm;
-	G4double fBeamCheck_SizeZ = 0.01 * cm;
+	G4double fBeamCheck_SizeX = 4.0 * mm;
+	G4double fBeamCheck_SizeY = 2.0 * mm;
+	G4double fBeamCheck_SizeZ = 0.1 * mm;
 
 	G4double fElectrode_SizeXZ = 1 * cm;
 	G4double fElectrode_SizeY = 0.005 * cm;
@@ -100,14 +103,17 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	//G4double temperature = CLHEP::STP_Temperature;
 	G4double temperature = 300 * kelvin;
 
-	G4double pressure = 1e-0 * hep_pascal;
-	G4double Xe_density = 5.252e-5 * mg / cm3;
+	//G4double pressure = 1e-0 * hep_pascal;
+	//G4double Xe_density = 5.252e-5 * mg / cm3;
 
 	//G4double pressure = 1e-1 * hep_pascal;
 	//double Xe_density = 5.252e-6 * mg / cm3;
 
-	//G4double pressure = 1e-1 * hep_pascal;
-	//double Xe_density = 5.252e-6 * mg / cm3;
+	//G4double pressure = 1e-2 * hep_pascal;
+	//double Xe_density = 5.252e-7 * mg / cm3;
+
+	G4double pressure = 1e-3 * hep_pascal;
+	double Xe_density = 5.252e-8 * mg / cm3;
 
 	G4double a = 131.29 * g / mole;
 	G4Element* elXe = new G4Element("Xenon", "Xe", 54., a);
@@ -117,7 +123,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	xenon->AddElement(elXe, 1);
 
 	//G4double Xe_density  = 5.48*mg/cm3; // The density of Xe gas at STP
-	//G4double Xe_density  = 5.252e-8*mg/cm3; // The density of Xe gas at STP
+	//G4double Xe_density  = 5.252e-8*mg/cm3;
 
 	G4Material* my_gas = new G4Material("LowP_Xe_Gas", Xe_density, 1,
 		kStateGas, temperature, pressure);
@@ -131,7 +137,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	//     
 	// World
 	//
-	G4double fWorld_SizeXY = 2 * fChamber_SizeXY;
+	G4double fWorld_SizeXY = 2 * fChamber_SizeX;
 	G4double fWorld_SizeZ = 2 * fChamber_SizeZ;
 
 	G4Material* world_mat = nist->FindOrBuildMaterial("G4_AIR");
@@ -143,10 +149,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 			fWorld_SizeZ);     //its size
 
 	G4LogicalVolume* flogicWorld =
-		new G4LogicalVolume(fsolidWorld,          //its solid
-							//world_mat,           //its material
-			fVacuum,
-			"World");            //its name
+		new G4LogicalVolume(
+			fsolidWorld,          //its solid
+			fVacuum,			  //world_mat
+			"World");             //its name
 
 	G4VPhysicalVolume* fphysWorld =
 		new G4PVPlacement(0,                     //no rotation
@@ -166,9 +172,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 	G4LogicalVolume* fLogicEnv =
 		new G4LogicalVolume(fSolidEnv,
-			//fStainless,         // its material
-			fVacuum,         // its material
-			//fAir,         // its material
+			fVacuum,			   // its material
+			//fAir,			       // its material
 			"Envelope");
 
 	G4VPhysicalVolume* fPhysEnv =
@@ -181,81 +186,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 			0,
 			checkOverlaps);
 
-	// Electrode - trial 1
-/*
-  G4double pZ = 0.1*cm;
-  G4double pY = 1.5*cm;
-  G4double pX = 1.5*cm;
-  G4double pLTX = 0.01*cm;
-
-  G4Trap* fSolidTrap =
-		new G4Trap("GenitaliaTrap",
-								pZ, pY, pX, pLTX);
-
-  G4LogicalVolume* fLogicElectrode1 =
-	new G4LogicalVolume(fSolidTrap,
-												fAir,         // its material
-												"Envelope");
-
-  G4LogicalVolume* fLogicElectrode2 =
-	new G4LogicalVolume(fSolidTrap,
-												fAir,         // its material
-												"Envelope");
-
-	G4VPhysicalVolume* fPhysElectrode1 =
-	new G4PVPlacement(0,
-					  G4ThreeVector(),
-					  "Envelope",
-					  fLogicElectrode1,
-					  fphysWorld,
-					  false,
-					  0,
-					  checkOverlaps);
-
-	G4VPhysicalVolume* fPhysElectrode2 =
-	new G4PVPlacement(G4ThreeVector(0,0,90*degree),
-					  G4ThreeVector(),
-					  "Envelope",
-					  fLogicElectrode2,
-					  fphysWorld,
-					  false,
-					  0,
-					  checkOverlaps);
-
-*/
-// Electrode - trial 1
-/*
-G4SDManager* SDman = G4SDManager::GetSDMpointer();
-
-  SensitiveDetector* sdE = new SensitiveDetector("electrodeSD");
-  SDman->AddNewDetector(sdE);
-
-G4Box* fSolidElectrode =
-  new G4Box("Electrode",
-			 fElectrode_SizeXZ,
-			 fElectrode_SizeY,
-			 fElectrode_SizeXZ );
-
-G4LogicalVolume* fLogicElectrode =
-  new G4LogicalVolume(fSolidElectrode,
-											  fCopper,
-					  "Electrode",
-					  0, sdE);
-
-G4VPhysicalVolume* fPhysElectrode =
-  new G4PVPlacement(0,
-					G4ThreeVector(0,-(fChamber_SizeXY+fElectrode_SizeY), -fChamber_SizeZ/2),
-					"Electrode",
-					fLogicElectrode,
-					fPhysEnv,
-					false,
-					0,
-					checkOverlaps);
-*/
 	G4Box* fSolidChamber =
 		new G4Box("Chamber",
-			fChamber_SizeXY,
-			fChamber_SizeXY,
+			fChamber_SizeX,
+			fChamber_SizeY,
 			fChamber_SizeZ);
 
 	G4LogicalVolume* fLogicChamber =
@@ -275,7 +209,7 @@ G4VPhysicalVolume* fPhysElectrode =
 
 	//fScoringVolume = fLogicElectrode;
 
-	  // Sensitive Detectors
+	// Sensitive Detectors
 	G4SDManager* SDman = G4SDManager::GetSDMpointer();
 
 	SensitiveDetector* SD_A = new SensitiveDetector("ElectrodeSD_A");
@@ -297,6 +231,7 @@ G4VPhysicalVolume* fPhysElectrode =
 	//std::vector<G4TwoVector> zsec = { {-Electrode_thickness / 2, {0,0}, 1}
 	//                                   { Electrode_thickness / 2, {0,0}, 1} };
 
+	/*
 	G4ExtrudedSolid* fSolidElectrodeA = new G4ExtrudedSolid(
 		"ElectrodeA",
 		{ {10,10}, {-10,-10}, {-10,10} },
@@ -305,11 +240,21 @@ G4VPhysicalVolume* fPhysElectrode =
 		"ElectrodeB",
 		{ {10,10}, {-10,-10}, {10,-10} },
 		{ {0,{0,0},1}, {1,{0,0},1} });
+	*/
+	G4ExtrudedSolid* fSolidElectrodeA = new G4ExtrudedSolid(
+		"ElectrodeA",
+		{ {20,180}, {-20,-20}, {-20,180} },
+		{ {0,{0,0},1}, {1,{0,0},1} });
+	G4ExtrudedSolid* fSolidElectrodeB = new G4ExtrudedSolid(
+		"ElectrodeB",
+		{ {20,180}, {-20,-20}, {20,-20} },
+		{ {0,{0,0},1}, {1,{0,0},1} });
+
 
 	G4LogicalVolume* fLogicElectrodeA =
 		new G4LogicalVolume(fSolidElectrodeA,
-			fCopper,
-			//fVacuum,
+			//fCopper,
+			fVacuum,
 			"ElectrodeA",
 			0,
 			SD_A);
@@ -318,7 +263,7 @@ G4VPhysicalVolume* fPhysElectrode =
 	RotMatA.rotateX(90 * deg);
 	RotMatA.rotateY(0);
 	RotMatA.rotateZ(0);
-	G4ThreeVector Pos_ElecA = G4ThreeVector(0, -(fChamber_SizeXY + fElectrode_SizeY) + 0.05 * mm, -(fChamber_SizeZ / 2));
+	G4ThreeVector Pos_ElecA = G4ThreeVector(0, -(fChamber_SizeY + fElectrode_SizeY) + 0.05 * mm, -(fChamber_SizeZ / 2));
 	G4Transform3D TransformA = G4Transform3D(RotMatA, Pos_ElecA);
 
 	//G4VPhysicalVolume* PhysiElectrodeA =
@@ -332,8 +277,8 @@ G4VPhysicalVolume* fPhysElectrode =
 
 	G4LogicalVolume* fLogicElectrodeB =
 		new G4LogicalVolume(fSolidElectrodeB,
-			fCopper,
-			//fVacuum,
+			//fCopper,
+			fVacuum,
 			"ElectrodeB",
 			0,
 			SD_B);
@@ -342,7 +287,7 @@ G4VPhysicalVolume* fPhysElectrode =
 	RotMatB.rotateX(90 * deg);
 	RotMatB.rotateY(0);
 	RotMatB.rotateZ(0);
-	G4ThreeVector Pos_ElecB = G4ThreeVector(0, -(fChamber_SizeXY + fElectrode_SizeY) + 0.05 * mm, -(fChamber_SizeZ / 2));
+	G4ThreeVector Pos_ElecB = G4ThreeVector(0, -(fChamber_SizeY + fElectrode_SizeY) + 0.05 * mm, -(fChamber_SizeZ / 2));
 	G4Transform3D TransformB = G4Transform3D(RotMatB, Pos_ElecB);
 
 	//G4VPhysicalVolume* PhysiElectrodeB =
@@ -354,11 +299,11 @@ G4VPhysicalVolume* fPhysElectrode =
 		4,
 		checkOverlaps);
 
-	
+
 	G4Box* fSolidSDforElec =
 		new G4Box("SDforElec",
-			fPipeForElectron_SizeXY,
-			fPipeForElectron_SizeXY,
+			fPipeForElectron_SizeX,
+			fPipeForElectron_SizeY,
 			fPipeForElectron_SizeZ);
 
 	G4LogicalVolume* fLogicSDforElec =
@@ -370,41 +315,42 @@ G4VPhysicalVolume* fPhysElectrode =
 
 	//G4VPhysicalVolume* PhysiChamber = 
 	new G4PVPlacement(0,
-		G4ThreeVector(0, -13, 0),
+		G4ThreeVector(0, 0, 0),
 		"Pipe",
 		fLogicSDforElec,
 		PhysiChamber,
 		false,
 		11,
 		checkOverlaps);
-	
-	/*
+
+
 	G4Box* fSolidBeamCheck =
 		new G4Box("BeamCheck",
-			fBeamCheck_SizeXY,
-			fBeamCheck_SizeXY,
+			fBeamCheck_SizeX,
+			fBeamCheck_SizeY,
 			fBeamCheck_SizeZ);
 
 	G4LogicalVolume* fLogicBeamCheck =
 		new G4LogicalVolume(fSolidBeamCheck,
-			fVacuum,
-			//fCopper,
+			//fVacuum,
+			fChamber_gas,
 			"BeamCheck",
 			0, SD_BeamCheck);
 
 
 	//G4VPhysicalVolume* PhysiChamber = 
 	new G4PVPlacement(0,
-		G4ThreeVector(0, 0, -4.8 * cm),
+		//G4ThreeVector(0, -13 * mm, -49.9 * mm),
+		G4ThreeVector(0, -5 * mm, -fPipeForElectron_SizeZ - 0.2 * mm),
 		"BeamCheck",
 		fLogicBeamCheck,
 		PhysiChamber,
 		false,
 		0,
 		checkOverlaps);
-		*/
+
 	// set region for SetCuts
-	G4String regName[] = { "chamber","electrode", "envelope","beampipe",};
+	G4String regName[] = { "chamber", "electrode", "envelope", "beampipe", "beamcheck" };
 
 	ChamberRegion = new G4Region(regName[0]);
 	fLogicChamber->SetRegion(ChamberRegion);
@@ -424,6 +370,10 @@ G4VPhysicalVolume* fPhysElectrode =
 	fLogicSDforElec->SetRegion(PipeRegion);
 	PipeRegion->AddRootLogicalVolume(fLogicSDforElec);
 
+	BeamCheckRegion = new G4Region(regName[4]);
+	fLogicBeamCheck->SetRegion(BeamCheckRegion);
+	BeamCheckRegion->AddRootLogicalVolume(fLogicBeamCheck);
+
 	G4cout << *(G4Material::GetMaterialTable()) << G4endl;
 	return fphysWorld;
 }
@@ -437,17 +387,5 @@ void DetectorConstruction::ConstructSDandField()
 		G4AutoDelete::Register(fieldSetup); //Kernel will delete the messenger
 		fEmFieldSetup.Put(fieldSetup);
 	}
-
-	// Sensitive Detectors
-  //G4SDManager* SDman = G4SDManager::GetSDMpointer();
-
-	//SensitiveDetector* ElectrodeSD_A = new SensitiveDetector("ElectrodeSD_A");
-	//SDman->AddNewDetector(ElectrodeSD_A);
-	//fLogicElectrode->SetSensitiveDetector(ElectrodeSD_A);
-
-	//SensitiveDetector* ElectrodeSD_B = new SensitiveDetector("ElectrodeSD_B");
-	//SDman->AddNewDetector(ElectrodeSD_B);
-	//fLogicElectrodeB->SetSensitiveDetector(ElectrodeSD_B);
-
 
 }

@@ -54,22 +54,20 @@ public:
 	virtual void ConstructSDandField();
 
 	G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
-	//G4LogicalVolume*	fLogicElectrode; 
-	//G4LogicalVolume*	fLogicElectrodeA; 
-	//G4LogicalVolume*	fLogicElectrodeB; 
 
-	G4Region* ChamberRegion; // cut region
-	G4Region* ElectrodeRegion; // cut region
-	G4Region* EnvelopeRegion; // cut region
-	G4Region* PipeRegion; // cut region
+
+	G4Region* ChamberRegion;		// cut region
+	G4Region* ElectrodeRegion;	    // cut region
+	G4Region* EnvelopeRegion;		// cut region
+	G4Region* PipeRegion;			// cut region
+	G4Region* BeamCheckRegion;	    // cut region
 
 
 protected:
 	G4LogicalVolume* fScoringVolume;
 private:
 	G4Cache<ElectricFieldSetup*> fEmFieldSetup;
-	//G4Cache<SensitiveDetector*>  fElectrodeSD_A;
-	//G4Cache<SensitiveDetector*>  fElectrodeSD_B;
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
