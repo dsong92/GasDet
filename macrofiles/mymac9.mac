@@ -1,0 +1,144 @@
+#
+# Macro file for "AmBe.cc"
+#
+/tracking/verbose 0
+/control/verbose 0
+/run/verbose 2
+
+#/random/setSeeds 13049039 61775110
+
+/run/initialize
+#
+/process/list
+
+/gps/particle gamma
+/gps/direction 0.0 0.0 1.0
+/gps/pos/centre 0.0 -5 -149.7 mm
+
+#/gps/ene/type Lin
+#/gps/ene/min 600 eV
+#/gps/ene/max 1000 eV
+#/gps/ene/gradient 0.
+#/gps/ene/intercept 2
+
+#/gps/ene/type Lin
+#/gps/ene/min 1 eV
+#/gps/ene/max 1000 eV
+#/gps/ene/gradient 0.
+#/gps/ene/intercept 2
+
+#/gps/particle e-
+#/gps/pos/type Point
+#/gps/pos/centre 0. -5. 0 mm
+#/gps/ang/type iso
+#/gps/energy 8 eV
+
+#/gps/pos/type Point
+#/gps/energy 115 eV
+
+#/gps/pos/type Beam
+#/gps/pos/sigma_x 487 um
+#/gps/pos/sigma_y 340 um
+#/gps/energy 115 eV
+
+#/gps/pos/type Beam
+#/gps/pos/sigma_x 503 um
+#/gps/pos/sigma_y 191 um
+#/gps/energy 310 eV
+
+/gps/energy 930 eV
+/analysis/setFileName 0414_930eV
+
+#/analysis/setFileName 1E-2Pa_81eV_point_Efield500V_1E8photon_ElectrodeVac_ProducCutFrom1eV_opt3_MinusX15um
+
+
+/analysis/h2/setX 0 200 -25 25 mm
+/analysis/h2/setY 0 200 -160 200 mm
+/analysis/h2/setXaxis 0 X[mm]
+/analysis/h2/setYaxis 0 Z[mm]
+
+/analysis/h2/setX 1 200 -25 25 mm
+/analysis/h2/setY 1 200 -160 200 mm
+/analysis/h2/setXaxis 1 X[mm]
+/analysis/h2/setYaxis 1 Z[mm]
+
+
+/analysis/h2/setX 2 200 -25 25 mm
+/analysis/h2/setY 2 200 -160 200 mm
+/analysis/h2/setXaxis 2 X[mm]
+/analysis/h2/setYaxis 2 Z[mm]
+
+/analysis/h2/setX 3 100 -200 200
+/analysis/h2/setY 3 100  0 500 eV
+/analysis/h2/setXaxis 3 Phi
+/analysis/h2/setYaxis 3 eV
+
+/analysis/h2/setX 4 100 -200 200
+/analysis/h2/setY 4 100  0 500 eV
+/analysis/h2/setXaxis 4 Theta
+/analysis/h2/setYaxis 4 eV
+
+/analysis/h2/setX 5 100 -200 200
+/analysis/h2/setY 5 100 -200 200
+/analysis/h2/setXaxis 5 Theta[deg]
+/analysis/h2/setYaxis 5 Phi[deg]
+
+/analysis/h1/set 0 100 -25 25 mm
+/analysis/h1/setXaxis 0 X[mm]
+/analysis/h1/setYaxis 0 Entries
+
+/analysis/h1/set 1 100 -25 25 mm
+/analysis/h1/setXaxis 1 X[mm]
+/analysis/h1/setYaxis 1 Entries
+
+/analysis/h1/set 2 200 -150 200 mm
+/analysis/h1/setXaxis 2 Z[mm]
+/analysis/h1/setYaxis 2 Entries
+
+/analysis/h1/set 3 200 -150 200 mm
+/analysis/h1/setXaxis 3 Z[mm]
+/analysis/h1/setYaxis 3 Entries
+
+/analysis/h1/set 4 100 0 500 eV
+/analysis/h1/setXaxis 4 eV
+/analysis/h1/setYaxis 4 Entries
+
+/analysis/h1/set 5 1000 0 1000 eV
+/analysis/h1/setXaxis 5 eV
+/analysis/h1/setYaxis 5 Entries
+
+/analysis/h1/set 6 100 -2 2 mm
+/analysis/h1/setXaxis 6 X[mm]
+/analysis/h1/setYaxis 6 Entries
+
+/analysis/h1/set 7 300 -15 0 mm
+/analysis/h1/setXaxis 7 Y[mm]
+/analysis/h1/setYaxis 7 Entries
+
+/analysis/h1/set 8 100 -25 25 mm
+/analysis/h1/setXaxis 8 X
+/analysis/h1/setYaxis 8 Entries
+
+/analysis/h1/set 9 200 -150 200 mm
+/analysis/h1/setXaxis 9 Z
+/analysis/h1/setYaxis 9 Entries
+
+/analysis/h1/set 10 200 0 1000 eV
+/analysis/h1/setXaxis 10 eV
+/analysis/h1/setYaxis 10 Entries
+
+/analysis/h1/set 11 200 -200 200
+/analysis/h1/setXaxis 11 Phi[deg]
+/analysis/h1/setYaxis 11 Entries
+# 12 theta
+#/analysis/h1/set 12 200 -200 200
+#/analysis/h1/setXaxis 12 Theta[deg]
+#/analysis/h1/setYaxis 12 Entries
+
+/analysis/h1/set 14 200 -150 150 mm
+/analysis/h1/setXaxis 14 Z[mm]
+/analysis/h1/setYaxis 14 Count
+
+/run/printProgress 10000000
+
+/run/beamOn 100000000
