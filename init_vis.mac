@@ -11,6 +11,202 @@
 #
 # Initialize kernel
 /run/initialize
+
+#/gps/particle gamma
+#/gps/direction 0.0 0.0 1.0
+#/gps/pos/centre 0.0 -5.0 -49.9 mm
+#/gps/pos/type Point
+#/gps/energy 1000 eV
+
+/process/list
+
+/gps/source/intensity 1.
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 8 eV
+
+/gps/source/add 0.21
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 18 eV
+
+/gps/source/add 0.03
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 46 eV
+
+/gps/source/add 0.13
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 11 eV
+
+/gps/source/add 1.6
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 12 eV
+
+/gps/source/add 0.04
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 85 eV
+
+/gps/source/add 0.05
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 61 eV
+
+/gps/source/add 0.06
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 103 eV
+
+/gps/source/add 0.08
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 127 eV
+
+/gps/source/add 0.06
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 279 eV
+
+/gps/source/add 0.05
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 397 eV
+
+/gps/source/add 0.04
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 498 eV
+
+/gps/source/add 0.03
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 557 eV
+
+/gps/source/add 0.13
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 145 eV
+
+/gps/source/add 0.21
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 95 eV
+
+/gps/source/add 0.14
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 209 eV
+
+/gps/source/add 0.11
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 305 eV
+
+/gps/source/add 0.11
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 329 eV
+
+/gps/source/add 0.12
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 296 eV
+
+/gps/source/add 0.12
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 310 eV
+
+/gps/source/add 0.11
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 354 eV
+
+
+#/gps/particle gamma
+#/gps/direction 0.0 0.0 1.0
+#/gps/pos/centre 0.0 -5 -149.7 mm
+
+#/gps/ene/type Lin
+#/gps/ene/min 1 eV
+#/gps/ene/max 1000 eV
+#/gps/ene/gradient 0.
+#/gps/ene/intercept 2
+
+#/gps/particle e-
+#/gps/pos/type Point
+#/gps/pos/shape Circle
+#/gps/pos/centre 0. -5. 0 mm
+#/gps/pos/halfx 1. mm
+#/gps/pos/halfy 1. mm
+#/gps/pos/halfz 1. mm
+#/gps/ang/type iso
+#/gps/ang/mintheta -180 deg
+#/gps/ang/maxtheta 180 deg
+#/gps/ang/minphi 0 deg
+#/gps/ang/maxphi 360 deg
+#/gps/energy 8 eV
+
+
+#/gps/pos/type Point
+#/gps/energy 115 eV
+
+#/gps/pos/type Beam
+#/gps/pos/sigma_x 487 um
+#/gps/pos/sigma_y 340 um
+#/gps/energy 115 eV
+
+#/gps/pos/type Beam
+#/gps/pos/sigma_x 503 um
+#/gps/pos/sigma_y 191 um
+#/gps/energy 150 eV
+
+#/gps/energy 100 eV
 #
 # Visualization setting
 /control/execute vis.mac

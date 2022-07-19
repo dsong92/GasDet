@@ -33,7 +33,7 @@
 #include "G4ThreeVector.hh"
 #include "G4UserEventAction.hh"
 #include "globals.hh"
-
+#include "GaramGlobal.hh"
 #include <vector>
 
 class RunAction;
@@ -49,18 +49,26 @@ public:
 
 	virtual void BeginOfEventAction(const G4Event* event);
 	virtual void EndOfEventAction(const G4Event* event);
+	virtual void WriteParticle(string file_name, garam::particle_io* p);
+	// write particle is inserted at 07-05
 
-	G4double pos_x_A;
+	G4double pos_x_A; // photo-electron이 electrode A에 도달했을 떄 x posotion
 	G4double pos_x_B;
-	G4double pos_x_BC;
+	G4double pos_y_A;
+	G4double pos_y_B;
 	G4double pos_z_A;
 	G4double pos_z_B;
-	G4double pos_y_BC;
+	G4double pos_x_BC_IN; // BC : beam check
+	G4double pos_y_BC_IN;
+	G4double pos_x_BC_OUT; // BC : beam check
+	G4double pos_y_BC_OUT;
 	G4double Energy_A;
 	G4double Energy_B;
-	G4double Energy_BC;
+	G4double Energy_BC_IN;
+	G4double Energy_BC_OUT;
 	G4double Energy_Monitor;
 	G4double Phot_Elec_Energy;
+	G4double Phot_in_pipe;
 	G4double Phi;
 	G4double Theta;
 	G4double px;
@@ -73,9 +81,10 @@ public:
 	
 private:
 	RunAction* fRunAction;
-	G4int fCollectionID_A;
-	G4int fCollectionID_B;
-	G4int fCollectionID_BC;
+	G4int fCollectionID_Electrode_A;
+	G4int fCollectionID_Electrode_B;
+	G4int fCollectionID_BC_IN;
+	G4int fCollectionID_BC_OUT;
 	G4int fCollectionID_Pipe;
 
 };

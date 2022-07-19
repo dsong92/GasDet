@@ -58,15 +58,19 @@
 #include "G4HelixSimpleRunge.hh"
 #include "G4CashKarpRKF45.hh"
 #include "G4RKG3_Stepper.hh"
+#include "DetectorMessenger.hh"
 
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4VUserDetectorConstruction.hh"
+
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 //  Constructors:
 
-ElectricFieldSetup::ElectricFieldSetup()
+ElectricFieldSetup::ElectricFieldSetup() 
  : fMinStep(0.01*mm),
    fFieldManager(0),
    fChordFinder(0),
@@ -75,15 +79,44 @@ ElectricFieldSetup::ElectricFieldSetup()
    fElFieldValue(),
    fStepper(0),
    fIntgrDriver(0),
-   fStepperType(4)    // ClassicalRK4 -- the default stepper
+   fStepperType(4)   // ClassicalRK4 -- the default stepper
 {
+
+  //dm = new DetectorMessenger();
+
   fEMfield = new G4UniformElectricField(
-                   G4ThreeVector(0.0, 0.5*kilovolt/cm, 0.0));
+                   G4ThreeVector(0.0, 0.0, 0.0)); // 500 V / cm
+                   //G4ThreeVector(0.0, 1.5 * kilovolt / cm, 0.0)); // 500 V / cm
   fEquation = new G4EqMagElectricField(fEMfield);
 
   fFieldManager = GetGlobalFieldManager();
 
   UpdateIntegrator();
+}
+
+ElectricFieldSetup::ElectricFieldSetup(G4double field_value)
+    : fMinStep(0.01 * mm),
+    fFieldManager(0),
+    fChordFinder(0),
+    fEquation(0),
+    fEMfield(0),
+    fElFieldValue(),
+    fStepper(0),
+    fIntgrDriver(0),
+    fStepperType(4)   // ClassicalRK4 -- the default stepper
+{
+
+    //dm = new DetectorMessenger();
+    G4cout << "****Field Value --> " << field_value << G4endl;
+
+    fEMfield = new G4UniformElectricField(
+        //                 G4ThreeVector(0.0, 0.0, 0.0)); // 500 V / cm
+        G4ThreeVector(0.0, field_value * volt / cm, 0.0)); // 500 V / cm
+    fEquation = new G4EqMagElectricField(fEMfield);
+
+    fFieldManager = GetGlobalFieldManager();
+
+    UpdateIntegrator();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -99,6 +132,7 @@ ElectricFieldSetup::ElectricFieldSetup(G4ThreeVector fieldVector)
     fIntgrDriver(0),
     fStepperType(4)    // ClassicalRK4 -- the default stepper
 {
+
   fEMfield = new G4UniformElectricField(fieldVector);
   fEquation = new G4EqMagElectricField(fEMfield);
 
@@ -275,6 +309,8 @@ void ElectricFieldSetup::SetFieldValue(G4ThreeVector fieldVector)
   }
   fieldMgr->SetDetectorField(fEMfield);
   fEquation->SetFieldObj(fEMfield);  // must now point to the new field
+
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

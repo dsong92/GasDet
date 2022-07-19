@@ -41,6 +41,7 @@
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
 
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 RunAction::RunAction()
@@ -58,16 +59,32 @@ RunAction::~RunAction()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void RunAction::BeginOfRunAction(const G4Run*)
+void RunAction::BeginOfRunAction(const G4Run* run)
 {
+	
 	// inform the runManager to save random number seed
 	G4RunManager::GetRunManager()->SetRandomNumberStore(false);
-
+	
 	G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 	if (analysisManager->IsActive()) {
 		analysisManager->OpenFile();
 	}
+	/*
+	// *** 0706 Add, for input/output consistance
+	G4int HEADER_SIZE = 1024;
+	G4String STRUCTURE = "iddddddd";
+	G4int SIZE_OF_INT = 4;
+	G4int SIZE_OF_DOUBLE = 8;
+	G4int SIZE_OF_STRUCTURE = SIZE_OF_INT * 1 + SIZE_OF_DOUBLE * 7;
 
+	G4int NI__ = HEADER_SIZE / SIZE_OF_INT;
+
+	int counter = 0;
+	std::ofstream fout;
+	fout.open(file_name, std::ios::out | std::ios::binary);
+	fout.write((char*)&p, sizeof(garam::particle_io));
+	fout.close();  
+	*/
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -75,7 +92,7 @@ void RunAction::BeginOfRunAction(const G4Run*)
 void RunAction::EndOfRunAction(const G4Run* run)
 {
 	//if (isMaster) run->EndOfRun();
-
+	
 	//save histograms      
 	G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 	if (analysisManager->IsActive()) {

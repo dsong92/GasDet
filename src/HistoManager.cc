@@ -54,6 +54,7 @@ HistoManager::~HistoManager()
 
 void HistoManager::Book()
 {
+	
 	// Create or get analysis manager
 	// The choice of analysis technology is done via selection of a namespace
 	// in HistoManager.hh
@@ -62,54 +63,49 @@ void HistoManager::Book()
 	analysisManager->SetFileName(fFileName);
 	analysisManager->SetActivation(true);     //enable inactivation of histograms
 
-	analysisManager->CreateNtuple("ElectrodeA", "VariablesA");
-	analysisManager->CreateNtupleDColumn("ProjectionX_A"); // column id = 0
-	analysisManager->CreateNtupleDColumn("ProjectionZ_A"); // column id = 1
-	analysisManager->FinishNtuple(0);
+	//analysisManager->CreateNtuple("ElectrodeA", "VariablesA");
+	analysisManager->CreateNtuple("ElectronInfo", "ElecInfo");
+	analysisManager->CreateNtupleDColumn("ElectronPos_X"); // column id = 0
+	analysisManager->CreateNtupleDColumn("ElectronPos_Y"); // column id = 1
+	analysisManager->CreateNtupleDColumn("ElectronPos_Z"); // column id = 2
+	analysisManager->CreateNtupleDColumn("ElectronMomD_X"); // column id = 3
+	analysisManager->CreateNtupleDColumn("ElectronMomD_Y"); // column id = 4
+	analysisManager->CreateNtupleDColumn("ElectronMomD_Z"); // column id = 5
+	analysisManager->CreateNtupleDColumn("PhotoElecEnergy"); // column id = 6
+	analysisManager->FinishNtuple();
 
-	analysisManager->CreateNtuple("ElectrodeB", "VariablesB");
-	analysisManager->CreateNtupleDColumn("ProjectionX_B"); // column id = 0
-	analysisManager->CreateNtupleDColumn("ProjectionZ_B"); // column id = 1
-	analysisManager->FinishNtuple(1);
+ 	analysisManager->CreateH2("0", "Electrode_A", 100, -50, 50, 100, -150, 150);
+	analysisManager->CreateH2("1", "Electrode_B", 100, -50, 50, 100, -150, 150);
+	analysisManager->SetH2Activation(0, true);
+	analysisManager->SetH2Activation(1, true);
 
-	analysisManager->CreateNtuple("SDpipe", "Variables");
-	//analysisManager->CreateNtupleDColumn("PhotoElectron_Energy"); // column id = 0
-	analysisManager->CreateNtupleDColumn("ElecEnergy"); // column id = 0
-	analysisManager->CreateNtupleDColumn("px"); // column id = 1
-	analysisManager->CreateNtupleDColumn("py"); // column id = 2
-	analysisManager->CreateNtupleDColumn("pz"); // column id = 4
-	analysisManager->CreateNtupleDColumn("phi"); // column id = 4
-	analysisManager->CreateNtupleDColumn("Pt"); // column id = 5
-	analysisManager->CreateNtupleDColumn("positionZ"); // column id = 6
-	analysisManager->FinishNtuple(2);
+	//analysisManager->CreateH2("1", "Photon_OUT", 100, -15, 15, 100, -40, -10);
+	//analysisManager->CreateH2("2", "ElectronHit_B", 100, -15, 15, 100, -40, -10);
+	//analysisManager->CreateH2("3", "Ekin_Vs_Phi", 400, -200, 200, 200, 0, 200);
+	//analysisManager->CreateH2("4", "Ekin_Vs_Theta", 400, -200, 200, 200, 0, 200);
+	//analysisManager->CreateH2("5", "Theta_Vs_Phi", 400, -200, 200, 400, 0, 200);
+	//analysisManager->CreateH2("6", "Photon_Beam_Position", 400, -200, 200, 400, 0, 200);
 
-
-	analysisManager->CreateH2("0", "ElectronHit_AB", 100, -15, 15, 100, -40, -10);
-	analysisManager->CreateH2("1", "ElectronHit_A",  100, -15, 15, 100, -40, -10);
-	analysisManager->CreateH2("2", "ElectronHit_B",  100, -15, 15, 100, -40, -10);
-	analysisManager->CreateH2("3", "Ekin_Vs_Phi",    400, -200, 200, 200, 0, 200);
-	analysisManager->CreateH2("4", "Ekin_Vs_Theta",  400, -200, 200, 200, 0, 200);
-	analysisManager->CreateH2("5", "Theta_Vs_Phi",   400, -200, 200, 400, 0, 200);
-
-	// Define histograms start values
-	const G4int kMaxHisto = 15;
-	const G4String id[] = { "0","1","2","3","4","5","6","7","8","9","10", "11", "12", "13","14" };
+	/*const G4int kMaxHisto = 16;
+	const G4String id[] = { "0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15" };
 	const G4String title[] =
-	{ "ProjectionX_ElectrodeA",			// id = 0
-	 "ProjectionX_ElectrodeB",		    // id = 1
-	 "ProjectionZ_ElectrodeA",			// id = 2
-	 "ProjectionZ_ElectrodeB",			// id = 3
-	 "E_{kin} of e^{-} at Electrode",   // id = 4
-	 "e^{-}_{phot} Energy",		        // id = 5
-	 "BeamX",						    // id = 6
-	 "BeamY",			                // id = 7
-	 "ProjX_ElectrodeAB",				// id = 8
-	 "ProjZ_ElectrodeAB",				// id = 9
-	 "Photo-Elec Energy",				// id = 10
-	 "dist. of phi",					// id = 11
-	 "dsit. of theta",		   		    // id = 12
-	 "dist. of P_{t}",					// id = 13
-	 "generated phot-elec positionZ"    // id = 14
+	{
+	 "dummy",							// id = 0
+	 "dummy",							// id = 1
+	 "Photon_Beam_IN_X",				// id = 2
+	 "Photon_Beam_IN_Y",				// id = 3
+	 "Photon_Beam_OUT_X",				// id = 4
+	 "Photon_Beam_OUT_Y",				// id = 5
+	 "Photon_Energy_IN",				// id = 6
+	 "Photon_Energy_OUT",				// id = 7
+	 "PhotonE_making_electron",			// id = 8
+	 "ElectronInput_posX",   			// id = 9
+	 "ElectronInput_posY",   			// id = 10
+	 "ElectronInput_posZ",   			// id = 11
+	 "ElectronInput_momX",   			// id = 12
+	 "ElectronInput_momY",   			// id = 13
+	 "ElectronInput_momZ",   			// id = 14
+	 "ElectronInput_kinE"   			// id = 15
 	};
 	// Default values (to be reset via /analysis/h1/set command)
 	G4int nbins = 100;
@@ -118,9 +114,22 @@ void HistoManager::Book()
 
 	for (G4int k = 0; k < kMaxHisto; k++) {
 		G4int ih = analysisManager->CreateH1(id[k], title[k], nbins, vmin, vmax);
-	}
-
-
+		analysisManager->SetH1Activation(ih, false);
+	}*/
+	analysisManager->CreateH1("0", "dummy", 100, -3, 3);
+	analysisManager->CreateH1("1", "dummy", 100, -3, 3);
+	analysisManager->CreateH1("2", "Electron_posX", 100, -3, 3);
+	analysisManager->CreateH1("3", "Electron_posY", 100, -30, 0);
+	analysisManager->CreateH1("4", "Electron_posZ", 100, -150, 150);
+	analysisManager->CreateH1("5", "PhotonEnergy", 100, 0, 1000*CLHEP::eV);
+	analysisManager->SetH1Activation(0, false);
+	analysisManager->SetH1Activation(1, false);
+	analysisManager->SetH1Activation(2, true);
+	analysisManager->SetH1Activation(3, true);
+	analysisManager->SetH1Activation(4, true);
+	analysisManager->SetH1Activation(5, true);
+	//analysisManager->SetH1Activation(6, true);
+	//analysisManager->SetH2Activation(1, false);
+	//
 }
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -37,6 +37,7 @@
 
 #include "G4ElectricField.hh"
 #include "G4UniformElectricField.hh"
+#include "DetectorMessenger.hh"
 
 class G4FieldManager;
 class G4ChordFinder;
@@ -46,6 +47,9 @@ class G4EqMagElectricField;
 class G4MagIntegratorStepper;
 class G4MagInt_Driver;
 class FieldMessenger;
+
+class DetectorMessenger;
+
 
 /// A class for control of the Electric Field of the detector.
 ///     The field for this case is uniform.
@@ -57,6 +61,7 @@ class FieldMessenger;
 class ElectricFieldSetup
 {
 public:
+	ElectricFieldSetup(G4double);
 	ElectricFieldSetup(G4ThreeVector);  //  The value of the field
 	ElectricFieldSetup();               //  A zero field - true value set later
 
@@ -107,6 +112,8 @@ private:
 
 
 	FieldMessenger* fFieldMessenger;
+
+	DetectorMessenger* dm;
 
 };
 

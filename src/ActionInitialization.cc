@@ -56,15 +56,15 @@ void ActionInitialization::BuildForMaster() const
 
 void ActionInitialization::Build() const
 {
-	PrimaryGeneratorAction* primary = new PrimaryGeneratorAction();
-  SetUserAction(primary);
+  //PrimaryGeneratorAction* primary = new PrimaryGeneratorAction();
+  //SetUserAction(primary);
 
   RunAction* runAction = new RunAction;
   SetUserAction(runAction);
   
   EventAction* eventAction = new EventAction(runAction);
   SetUserAction(eventAction);
-  
+  G4cout << "********* ActionInitialize Build()" << G4endl;
   SetUserAction(new SteppingAction(eventAction));
 }  
 

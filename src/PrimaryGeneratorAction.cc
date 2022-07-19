@@ -28,83 +28,150 @@
 /// \brief Implementation of the PrimaryGeneratorAction class
 
 #include "PrimaryGeneratorAction.hh"
+#include "PrimaryGeneratorMessenger.hh"
 
 #include "G4GeneralParticleSource.hh"
-#include "G4LogicalVolumeStore.hh"
-#include "G4LogicalVolume.hh"
-#include "G4Box.hh"
 #include "G4RunManager.hh"
 #include "G4ParticleGun.hh"
 #include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4SystemOfUnits.hh"
 #include "Randomize.hh"
+#include "G4UIdirectory.hh"
+#include "G4IonTable.hh"
+#include "G4UnitsTable.hh"
+#include "G4RootAnalysisManager.hh"
 
 #include "globals.hh"
+#include "G4ParticleTable.hh"
+
+#include "GaramGlobal.hh"
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-PrimaryGeneratorAction::PrimaryGeneratorAction()
-	: G4VUserPrimaryGeneratorAction(),
-	fParticleGun(0)
+PrimaryGeneratorAction::PrimaryGeneratorAction():
+    tmp_x(-999), tmp_y(-999)
+	//: G4VUserPrimaryGeneratorAction(),
+	//fParticleGun(0)
 	//fEnvelopeBox(0),X0(0.),Y0(0.),Z0(0.),SigmaX(0.),SigmaY(0.)
 {
-	fParticleGun = new G4GeneralParticleSource();
-	/*
-	G4int n_particle = 1;
-	fParticleGun  = new G4ParticleGun(n_particle);
-	// particle position
-	X0 = 1.0 *CLHEP::um;
-	Y0 = -14 *CLHEP::mm;
-	Z0 = -49.9 *CLHEP::mm;
-	SigmaX = 0.1 *CLHEP::mm;
-	SigmaY = 0.1 *CLHEP::mm;
-
-	  // default particle kinematic
-	G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-	G4String particleName;
-	G4ParticleDefinition* particle
-	  = particleTable->FindParticle(particleName="gamma");
-	fParticleGun->SetParticleDefinition(particle);
-	fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
-	fParticleGun->SetParticleEnergy(10.*keV);
-	*/
+	gm = new PrimaryGeneratorMessenger(this);
+	gun = new G4ParticleGun(1);
+	//fParticleGun = new G4GeneralParticleSource();
+	
 }
 
+
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void PrimaryGeneratorAction::BookHisto()
+{
+    if (gm->GetPdist()->size() == 0)
+    {
+        const BeamInfo b = gm->GetBeamInfo();
+        const G4double xm = b.X() * 3.0;
+        const G4double xpm = b.Xp() * 3.0;
+        const G4double ym = b.Y() * 3.0;
+        const G4double ypm = b.Yp() * 3.0;
+        const G4double w = b.MeanEnergy();
+        G4double dw = b.EsRatio() * b.MeanEnergy() * 3.0;
+        if (dw == 0.)
+        {
+            dw = w * 0.05;
+        }
+
+        G4RootAnalysisManager* ra = G4RootAnalysisManager::Instance();
+        id_xbeamh2 =
+            ra->CreateH2("ibeam_xphase", "Input Beam Information - X-X'",
+                100, -xm, xm,
+                100, -xpm, xpm);
+
+        id_ybeamh2 =
+            ra->CreateH2("ibeam_yphase", "Input Beam Information - Y-Y'",
+                100, -ym, ym,
+                100, -ypm, ypm);
+
+        id_energyh1 =
+            ra->CreateH1("ibeam_wdist", "Input Beam Information - Kinetic Energy",
+                100, w - dw, w + dw);
+    }
+
+
+}
+
+
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
-	delete fParticleGun;
+	delete gm;
+	delete gun;
+	//delete fParticleGun;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
-	fParticleGun->GeneratePrimaryVertex(anEvent);
-	/*
-	G4double x = X0;
-	G4double y = Y0;
-	G4double z = Z0;
+    //G4double half_world = 0.5 * myg->get_length_sum();
 
+    G4double xi = 0;                   // mm
+    G4double xpi = 0; // mrad
+    G4double yi = 0;                   // mm
+    G4double ypi = 0; // mard
+    G4double zi = 0;
+    G4double zpi = 0;
+    G4double wi = 1;  // mev/amu
 
-	//if ( SigmaX > 0.0 ){
-	//					x += G4RandGauss::shoot( X0, SigmaX );}
-	//
-	//if ( SigmaY > 0.0 ){
-	//					y += G4RandGauss::shoot( Y0, SigmaY );}
-	//
-	fParticleGun->SetParticlePosition(G4ThreeVector( x , y , z ) );
+    if ( gm->GetPdist()->size() == 0)
+    {
+        //const BeamInfo& b = gm->GetBeamInfo();
 
-	MeanKinE = 1 *CLHEP::keV;
-	SigmaE = 0 *CLHEP::keV;
+        //xi = G4RandGauss::shoot(0.0, b.X());                   // mm
+        //xpi = G4RandGauss::shoot(0.0, b.Xp()) + b.Slopx() * xi; // mrad
+        //yi = G4RandGauss::shoot(0.0, b.Y());                   // mm
+        //ypi = G4RandGauss::shoot(0.0, b.Yp()) + b.Slopy() * yi; // mard
+        //wi = G4RandGauss::shoot(b.MeanEnergy(), b.MeanEnergy() * b.EsRatio());  // mev/amu
+        G4cout << "*** gun is empty ****" << G4endl;
 
-	G4double kineticEnergy = G4RandGauss::shoot( MeanKinE, SigmaE );
-	fParticleGun -> SetParticleEnergy ( kineticEnergy );
+    }
+    else
+    {
+        std::vector<garam::particle_io>* particles = gm->GetPdist();
+        std::vector<garam::particle_io>::iterator pit = particles->begin();
+        pit += anEvent->GetEventID();
 
+        G4ParticleTable* ptab = G4ParticleTable::GetParticleTable();
+        G4ParticleDefinition* pdef;
+        if ((*pit).is_ion())
+        {
+        //    pdef = ptab->GetIonTable()->GetIon((*pit).get_Z(), (*pit).get_A(), 0, 0);
+        }
+        else // elementary particle (has pid)
+        {
+            pdef = ptab->FindParticle((*pit).get_pid());
+        }
+        gun->SetParticleDefinition(pdef);
+        
+        xi = (*pit).get_x(); // mm
+        yi = (*pit).get_y(); // mm
+        zi = (*pit).get_z(); // mm
+        xpi = (*pit).get_xp();
+        ypi = (*pit).get_yp();
+        zpi = (*pit).get_zp();
+        wi = (*pit).get_w(); // MeV 
+    }
+    //gun->SetParticlePosition(G4ThreeVector(xi, yi, -149));
+    
+    tmp_x = xi + gm->GetBeamShift();
+    tmp_y = yi + gm->GetBeamHeight();
+    //gun->SetParticlePosition(G4ThreeVector(xi+gm->GetBeamShift(), yi+gm->GetBeamHeight(), zi));
+    gun->SetParticlePosition(G4ThreeVector(tmp_x, tmp_y, zi));
+    //std::cout << "xi+ gm->GetBeamShift() : " << xi + gm->GetBeamShift() << std::endl; // 0711
 
-	fParticleGun->GeneratePrimaryVertex(anEvent);
-	*/
+    //gun->SetParticleMomentumDirection(G4ThreeVector(0, 0, 1.).unit());
+    gun->SetParticleMomentumDirection(G4ThreeVector(xpi, ypi, zpi).unit());
+    gun->SetParticleEnergy(wi);
+    gun->GeneratePrimaryVertex(anEvent); 
+    //G4cout << "X : " << xi << " || Y : " << yi << " || Z : " << zi <<" || Energy : "<< G4BestUnit(wi,"Energy") << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

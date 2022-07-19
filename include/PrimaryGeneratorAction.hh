@@ -33,13 +33,18 @@
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4ParticleGun.hh"
 #include "globals.hh"
+#include "G4Event.hh"
+#include "GaramGlobal.hh"
+#include "Beaminfo.hh"
 
 class G4ParticleGun;
 class G4Event;
-class G4Box;
 class DetectorConstruction;
 class G4ParticleDefinition;
+class G4RootAnalysisManager;
 class G4GeneralParticleSource;
+class PrimaryGeneratorMessenger;
+class geom; // **** 0701 *******
 
 /// The primary generator action class with particle gun.
 ///
@@ -52,24 +57,30 @@ public:
 	PrimaryGeneratorAction();
 	virtual ~PrimaryGeneratorAction();
 
-	// method from the base class
-	virtual void GeneratePrimaries(G4Event*);
+public:
+	void GeneratePrimaries(G4Event*);
+	void BookHisto();
+	PrimaryGeneratorMessenger* GetPGM() const { return gm; };
 
-	// method to access particle gun
-	//const G4ParticleGun* GetParticleGun() const { return fParticleGun; }
+
+	
+	void SetGeom(geom* ig) { myg = ig; }; // **** 0701 *******
+	geom* GetGeom() const { return myg; }; // **** 0701 *******
 
 private:
-	DetectorConstruction* fDetConstruction;    //pointer to the geometry
-	//G4ParticleGun*  fParticleGun; // pointer a to G4 gun class
-	G4GeneralParticleSource* fParticleGun;
-	G4Box* fEnvelopeBox;
-	G4double MeanKinE;
-	G4double SigmaE;
-	G4double X0;
-	G4double Y0;
-	G4double Z0;
-	G4double SigmaX;
-	G4double SigmaY;
+	G4ParticleGun*				 gun;
+	PrimaryGeneratorMessenger*   gm;
+	DetectorConstruction*        fDetConstruction;    //pointer to the geometry
+	G4GeneralParticleSource*     fParticleGun;
+
+	G4int                      id_xbeamh2;
+	G4int                      id_ybeamh2;
+	G4int                      id_energyh1;
+
+	G4double				   tmp_x;
+	G4double				   tmp_y;
+
+	geom* myg; // **** 0701 *******
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

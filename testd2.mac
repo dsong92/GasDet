@@ -1,0 +1,11 @@
+/control/verbose 0
+/run/verbose 0
+/analysis/setFileName 0719test
+#/beam/pdist test_1E8.d2
+/beam/pos/shift -244
+/beam/pos/up -23
+/beam/pdist 162harmonic.d2
+/det/electrode/width 20
+/det/electrode/length 100
+/det/Efield 1000
+#/pgm/book 1

@@ -1,0 +1,255 @@
+/tracking/verbose 0
+/control/verbose 0
+/run/verbose 2
+
+/run/initialize
+#
+/process/list
+
+# electron energy와 그 energy에서의 비율 설정
+
+/gps/source/intensity 1.
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 8 eV
+
+/gps/source/add 0.21
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 18 eV
+
+/gps/source/add 0.03
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 46 eV
+
+/gps/source/add 0.13
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 11 eV
+
+/gps/source/add 1.6
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 12 eV
+
+/gps/source/add 0.04
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 85 eV
+
+/gps/source/add 0.05
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 61 eV
+
+/gps/source/add 0.06
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 103 eV
+
+/gps/source/add 0.08
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 127 eV
+
+/gps/source/add 0.06
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 279 eV
+
+/gps/source/add 0.05
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 397 eV
+
+/gps/source/add 0.04
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 498 eV
+
+/gps/source/add 0.03
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 557 eV
+
+/gps/source/add 0.13
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 145 eV
+
+/gps/source/add 0.21
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 95 eV
+
+/gps/source/add 0.14
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 209 eV
+
+/gps/source/add 0.11
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 305 eV
+
+/gps/source/add 0.11
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 329 eV
+
+/gps/source/add 0.12
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 296 eV
+
+/gps/source/add 0.12
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 310 eV
+
+/gps/source/add 0.11
+/gps/particle e-
+/gps/pos/type Point
+/gps/pos/centre 0 -5 0 mm
+/gps/ang/type iso
+/gps/energy 354 eV
+
+# 결과파일 이름
+/analysis/setFileName test
+
+#/analysis/setFileName 1E-2Pa_81eV_point_Efield500V_1E8photon_ElectrodeVac_ProducCutFrom1eV_opt3_MinusX15um
+
+# HistoManager에서 설정한 1D, 2D histogram 설정
+
+/analysis/h2/setX 0 200 -25 25 mm
+/analysis/h2/setY 0 200 -160 200 mm
+/analysis/h2/setXaxis 0 X[mm]
+/analysis/h2/setYaxis 0 Z[mm]
+
+/analysis/h2/setX 1 200 -25 25 mm
+/analysis/h2/setY 1 200 -160 200 mm
+/analysis/h2/setXaxis 1 X[mm]
+/analysis/h2/setYaxis 1 Z[mm]
+
+
+/analysis/h2/setX 2 200 -25 25 mm
+/analysis/h2/setY 2 200 -160 200 mm
+/analysis/h2/setXaxis 2 X[mm]
+/analysis/h2/setYaxis 2 Z[mm]
+
+/analysis/h2/setX 3 100 -200 200
+/analysis/h2/setY 3 100  0 500 eV
+/analysis/h2/setXaxis 3 Phi
+/analysis/h2/setYaxis 3 eV
+
+/analysis/h2/setX 4 100 -200 200
+/analysis/h2/setY 4 100  0 500 eV
+/analysis/h2/setXaxis 4 Theta
+/analysis/h2/setYaxis 4 eV
+
+/analysis/h2/setX 5 100 -200 200
+/analysis/h2/setY 5 100 -200 200
+/analysis/h2/setXaxis 5 Theta[deg]
+/analysis/h2/setYaxis 5 Phi[deg]
+
+/analysis/h1/set 0 100 -25 25 mm
+/analysis/h1/setXaxis 0 X[mm]
+/analysis/h1/setYaxis 0 Entries
+
+/analysis/h1/set 1 100 -25 25 mm
+/analysis/h1/setXaxis 1 X[mm]
+/analysis/h1/setYaxis 1 Entries
+
+/analysis/h1/set 2 200 -150 200 mm
+/analysis/h1/setXaxis 2 Z[mm]
+/analysis/h1/setYaxis 2 Entries
+
+/analysis/h1/set 3 200 -150 200 mm
+/analysis/h1/setXaxis 3 Z[mm]
+/analysis/h1/setYaxis 3 Entries
+
+/analysis/h1/set 4 100 0 500 eV
+/analysis/h1/setXaxis 4 eV
+/analysis/h1/setYaxis 4 Entries
+
+/analysis/h1/set 5 1000 0 1000 eV
+/analysis/h1/setXaxis 5 ElectronE[eV]
+/analysis/h1/setYaxis 5 Entries
+
+/analysis/h1/set 6 100 -2 2 mm
+/analysis/h1/setXaxis 6 X[mm]
+/analysis/h1/setYaxis 6 Entries
+
+/analysis/h1/set 7 300 -15 0 mm
+/analysis/h1/setXaxis 7 Y[mm]
+/analysis/h1/setYaxis 7 Entries
+
+/analysis/h1/set 8 100 -25 25 mm
+/analysis/h1/setXaxis 8 X[mm]
+/analysis/h1/setYaxis 8 Entries
+
+/analysis/h1/set 9 200 -150 200 mm
+/analysis/h1/setXaxis 9 Z
+/analysis/h1/setYaxis 9 Entries
+
+/analysis/h1/set 10 200 0 1000 eV
+/analysis/h1/setXaxis 10 eV
+/analysis/h1/setYaxis 10 Entries
+
+/analysis/h1/set 11 200 -200 200
+/analysis/h1/setXaxis 11 Phi[deg]
+/analysis/h1/setYaxis 11 Entries
+
+# 12 theta
+#/analysis/h1/set 12 200 -200 200
+#/analysis/h1/setXaxis 12 Theta[deg]
+#/analysis/h1/setYaxis 12 Entries
+
+/analysis/h1/set 14 200 -150 150 mm
+/analysis/h1/setXaxis 14 Z[mm]
+/analysis/h1/setYaxis 14 Count
+
+/run/printProgress 100000
+
+/run/beamOn 643000

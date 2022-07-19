@@ -49,14 +49,13 @@ G4bool SensitiveDetector::ProcessHits(G4Step* stp, G4TouchableHistory*)
 	ht->SetMomentum(stp->GetPreStepPoint()->GetMomentum());
 	ht->SetCharge(trk->GetDynamicParticle()->GetCharge());
 	ht->SetKineticEnergy(stp->GetPreStepPoint()->GetKineticEnergy());
-	ht->SetKineticEnergyT(trk->GetKineticEnergy());
+	ht->SetKineticEnergyT(trk->GetKineticEnergy()); // Track에서 얻은 Kinetic energy, StepPoint와 비교해보기 위함
 	//ht->SetMomentumDirection(trk->GetMomentumDirection());
-	ht->SetMomentumDirection(stp->GetPreStepPoint()->GetMomentumDirection());
-	ht->SetPhotoElecEnergy(stp->GetPreStepPoint()->GetKineticEnergy());
-	ht->SetCopyNumber(stp->GetPreStepPoint()->GetTouchable()->GetCopyNumber());
 	ht->SetFlag(stp->IsFirstStepInVolume());
-	ht->SetStepLength(stp->GetStepLength());
-	ht->SetCurrentStepNum(trk->GetCurrentStepNumber());
+	ht->SetMomentumDirection(stp->GetPreStepPoint()->GetMomentumDirection()); // 생성된 입자의 초기 진행방향
+	ht->SetPhotoElecEnergy(stp->GetPreStepPoint()->GetKineticEnergy()); // photo-electron의 에너지
+	ht->SetCurrentStepNum(stp->GetTrack()->GetCurrentStepNumber());
+
 	hits->insert(ht);
 
 	return true;

@@ -24,7 +24,7 @@ public:
 	void SetMomentum(G4ThreeVector imom) { momentum = imom; };
 	void SetCharge(G4double icharge) { charge = icharge; };
 	void SetKineticEnergy(G4double ikineticEnergy) { kineticEnergy = ikineticEnergy; };
-	void SetKineticEnergyT(G4double ikineticEnergyT) { kineticEnergyT = ikineticEnergyT; };	// "T" means this variable is extracted from Track
+	void SetKineticEnergyT(G4double ikineticEnergyT) { kineticEnergyT = ikineticEnergyT; };	// "T" 는 Track에서 추출한 값 넣기 위함, StepPoint와 비교하기 위해 따로 만듦
 	void SetMomentumDirection(G4ThreeVector imomentumdirection) { momentumdirection = imomentumdirection; };
 	void SetPhotoElecEnergy(G4double iPhotElecEnergy) { PhotElecEnergy = iPhotElecEnergy; };
 	void SetCopyNumber(G4int icopynum) { copynum = icopynum; };

@@ -116,7 +116,7 @@ PhysicsList::PhysicsList()
 	// EM physics
 	//fEmPhysicsList = new G4EmStandardPhysics_option1();
 	//fEmPhysicsList = new G4EmStandardPhysics_option2();
-	fEmPhysicsList = new G4EmStandardPhysics_option3();
+	fEmPhysicsList = new G4EmStandardPhysics_option3(); // original
 	//fEmPhysicsList = new G4EmStandardPhysics_option4();
 
 }
@@ -153,10 +153,11 @@ void PhysicsList::ConstructProcess()
 void PhysicsList::SetCuts()
 {
 
-	// default production thresholds for the world volume
-	//SetCutsWithDefault();
+	// default production thresholds for the world volume 
+	SetCutsWithDefault();
 	// Xenon ionization energy is about 12 eV 
-	G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(12 * eV, 1 * GeV);
+	//G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(12 * eV, 1 * GeV);
+	
 	//SetCutValue(0 * mm, "proton");
 	//SetCutValue(1 * mm, "e-");
 	//SetCutValue(1 * mm, "e+");
@@ -165,7 +166,7 @@ void PhysicsList::SetCuts()
 	G4Region* region;
 	G4String regName;
 	G4ProductionCuts* cuts;
-	
+	/*
 	regName = "envelope";
 	region = G4RegionStore::GetInstance()->GetRegion(regName);
 	cuts = new G4ProductionCuts;
@@ -198,4 +199,5 @@ void PhysicsList::SetCuts()
 	cuts->SetProductionCut(10 * mm, G4ProductionCuts::GetIndex("e+"));
 	cuts->SetProductionCut(10 * mm, G4ProductionCuts::GetIndex("proton"));
 	region->SetProductionCuts(cuts);
+	*/
 }
