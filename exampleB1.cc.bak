@@ -26,15 +26,10 @@
 //
 /// \file example.cc
 /// \brief Main program of the  example
-#include <iostream>
-#include "GaramGlobal.hh"
+
 #include "DetectorConstruction.hh"
 #include "ActionInitialization.hh"
 #include "PhysicsList.hh"
-#include "PrimaryGeneratorAction.hh"
-#include "RunAction.hh"
-#include "EventAction.hh"
-#include "SteppingAction.hh"
 
 #ifdef G4MULTITHREADED
 #include "G4MTRunManager.hh"
@@ -46,10 +41,6 @@
 
 #include "G4UImanager.hh"
 #include "QBBC.hh"
-#include "GaramGlobal.hh"
-#include "PrimaryGeneratorAction.hh"
-#include "PrimaryGeneratorMessenger.hh"
-#include "G4RootAnalysisManager.hh"
 
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
@@ -60,12 +51,6 @@
 
 int main(int argc,char** argv)
 {
-
-  //G4RootAnalysisManager* ra = G4RootAnalysisManager::Instance();
-  //ra->OpenFile("test.root");
-
-  G4RunManager* runManager = new G4RunManager;
-
   // Detect interactive mode (if no arguments) and define UI session
   //
   G4UIExecutive* ui = 0;
@@ -73,24 +58,46 @@ int main(int argc,char** argv)
     ui = new G4UIExecutive(argc, argv);
   }
 
-  G4int seconds = time(NULL);
-  G4Random::setTheSeed(seconds);
- 
-  runManager->SetUserInitialization(new DetectorConstruction());  // 1. detector construction
-  runManager->SetUserInitialization(new PhysicsList());           // 2. physics list
-  PrimaryGeneratorAction* pga = new PrimaryGeneratorAction();
-  runManager->SetUserAction(pga);                                 // 3. PGA
-  //runManager->SetUserInitialization(new ActionInitialization()); // 4. ActionInit. 대신 밑의줄 추가
+  // Optionally: choose a different Random engine...
+  // G4Random::setTheEngine(new CLHEP::MTwistEngine);
   
-  RunAction* runAction = new RunAction; // ActionInit 안 에 있던 줄
-  runManager->SetUserAction(runAction); // ActionInit 안 에 있던 줄
+  // Construct the default run manager
+#ifdef G4MULTITHREADED
+  G4MTRunManager* runManager = new G4MTRunManager;
+  G4int nThreads = G4Threading::G4GetNumberOfCores();
+  if (argc==3) nThreads = G4UIcommand::ConvertToInt(argv[2]);
+  runManager->SetNumberOfThreads(nThreads);
+#else
+  //my Verbose output class
+  G4RunManager* runManager = new G4RunManager;
+#endif
 
-  EventAction* eventAction = new EventAction(runAction);  // ActionInit 안 에 있던 줄
-  runManager->SetUserAction(eventAction);  // ActionInit 안 에 있던 줄
-  runManager->SetUserAction(new SteppingAction(eventAction));  // ActionInit 안 에 있던 줄
 
+  // Construct the default run manager
+  //
+  //auto* runManager =
+  //  G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default);
 
+  // Set mandatory initialization classes
+  //
+  // Detector construction
+	//DetectorConstruction* det = new DetectorConstruction();
+  runManager->SetUserInitialization(new DetectorConstruction());
+
+  // Physics list
+  //G4VModularPhysicsList* physicsList = new QBBC;
+  //physicsList->SetVerboseLevel(1);
+  //runManager->SetUserInitialization(physicsList);
+  runManager->SetUserInitialization(new PhysicsList());
+
+  // User action initialization
+  runManager->SetUserInitialization(new ActionInitialization());
+  
+  // Initialize visualization
+  //
   G4VisManager* visManager = new G4VisExecutive;
+  // G4VisExecutive can take a verbosity argument - see /vis/verbose guidance.
+  // G4VisManager* visManager = new G4VisExecutive("Quiet");
   visManager->Initialize();
 
   // Get the pointer to the User Interface manager
@@ -111,18 +118,13 @@ int main(int argc,char** argv)
     delete ui;
   }
 
-  //std::cout << "----GARAM---- before rman->Initialize();\n";
-  runManager->Initialize();
-  //std::cout << "----GARAM---- after main::run_init\n";
-  runManager->BeamOn(pga->GetPGM()->GetPdist()->size());
-  G4cout << "**-----------> "<<pga->GetPGM()->GetPdist()->size() <<" events END" << G4endl;
-
-  //ra->Write();
-  //ra->CloseFile();
-
+  // Job termination
+  // Free the store: user actions, physics_list and detector_description are
+  // owned and deleted by the run manager, so they should not be deleted 
+  // in the main() program !
+  
   delete visManager;
   delete runManager;
-  //delete ra;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
